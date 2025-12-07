@@ -32,9 +32,21 @@ export const notificationSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        markAsSeenNotificationStart: (state) => {
+            state.loading = true;
+        },
+        markAsSeenNotificationSuccess: (state, action) => {
+            state.notifications = state.notifications.filter((notification) => notification.id != action.payload);
+            state.loading = false;
+        },
+        markAsSeenNotificationFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
         removeNotification: (state, action) => {
             state.notifications = state.notifications.filter((notification) => notification.id != action.payload);
-        }
+        },
+
     }
 });
 
@@ -46,6 +58,9 @@ export const {
     getUnseenNotificationsStart,
     getUnseenNotificationsSuccess,
     getUnseenNotificationsFailure,
+    markAsSeenNotificationStart,
+    markAsSeenNotificationSuccess,
+    markAsSeenNotificationFailure,
     removeNotification,
 } = notificationSlice.actions;
 

@@ -1,10 +1,14 @@
+import { markAsSeenNotificationStart } from '@/store/notification/notificationSlice';
 import React from 'react'
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 
 const IssueCreatedNotification = ({notification}) => {
-    const navigate = useNavigate()
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     const handleNotificationClick = () => {
+        dispatch(markAsSeenNotificationStart(notification.id));
         window.history.pushState({}, "", `/projectDetails/${notification.metadata.projectId}`);
         navigate(`/issueDetails/${notification.metadata.issueId}`);
     }

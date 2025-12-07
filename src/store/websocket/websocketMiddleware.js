@@ -9,6 +9,9 @@ const websocketMiddleware = store => next => action => {
     switch (action.type) {
         case connectWebsocketStart.type:
             console.log("connect ws acction");
+            if (client && client.connected) {
+                return next(action);
+            }
 
             const socket = new SockJS("http://localhost:8080/ws");
             client = new Client({
