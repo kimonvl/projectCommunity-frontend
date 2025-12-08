@@ -33,7 +33,7 @@ export function* login(action) {
     } catch (error) {
         console.error("Login Error:", error); // Debugging log
 
-        const errorMessage = error.response?.data?.message || "An error occurred";
+        const errorMessage = error.response?.data?.message || "Login failed";
         const errorStatus = error.response?.status || 500;
 
         yield put(loginFailure({ message: errorMessage, status: errorStatus }));

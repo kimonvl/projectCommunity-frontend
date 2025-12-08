@@ -1,9 +1,11 @@
-import { all, call, put, select, takeLatest } from "redux-saga/effects";
+import { all, call, put, select, take, takeLatest } from "redux-saga/effects";
 import { fetchActiveChatFailure, fetchActiveChatStart, fetchActiveChatSuccess, sendMessageFailure, sendMessageStart, sendMessageSuccess } from "./chatSlice";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
 import { selectCurrentUserId } from "../auth/auth.selector";
 import { selectActiveChatId } from "./chat.selector";
+import { connectWebsocketSuccess, subscribeToTopicStart } from "../websocket/websocketSlice";
+import { selectWebsocketIsConnected } from "../websocket/websocket.selector";
 
 export function* fetchActiveChat(action) {
     try {
@@ -26,9 +28,7 @@ export function* fetchActiveChat(action) {
 export function* sendMessage(action) {
     try {
         const senderId = yield select(selectCurrentUserId);
-        const chatId = 2;//yield select(selectActiveChatId);
-        
-        const res = yield call(sendAxiosPostJson, `chat/sendMessage`, {...action.payload, senderId, chatId });    
+        const res = yield call(sendAxiosPostJson, `chat/sendMessage`, action.payload);    
         if(res && res.data.success){
             yield put(sendMessageSuccess(res.data.data));
             toast.success(res.data.message);

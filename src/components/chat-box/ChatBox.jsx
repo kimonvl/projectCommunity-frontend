@@ -23,7 +23,6 @@ const ChatBox = () => {
 
         dispatch(
             sendMessageStart({
-                senderId: currentUserId,
                 chatId: activeChat.id,
                 content: content,
             })

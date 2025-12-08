@@ -21,14 +21,16 @@ function App() {
   const loading = useSelector(selectLoading);
 
   useEffect(() => {
-    if (location.pathname.startsWith("/auth"))
-      return;
+
     dispatch(isAuthenticatedStart());
   }, [])
 
   useEffect(() => {
-    dispatch(connectWebsocketStart());
-  }, [user])
+    if (isAuthenticated) {
+      console.log("Connecting WS...");
+      dispatch(connectWebsocketStart());
+    }
+  }, [isAuthenticated]);
 
   return (
     <Routes>

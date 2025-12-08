@@ -15,20 +15,39 @@ import IssueColumn from "@/components/issues/IssueColumn";
 import CreateIssue from "./CreateIssue";
 import { assignUserToIssueStart, getProjectIssuesStart } from "@/store/issue/issueSlice";
 import { selectSelectedProjectIssues } from "@/store/issue/issue.selector";
+import { selectActiveChatId } from "@/store/chat/chat.selector";
+import { subscribeToTopicStart, unSubscribeFromTopicStart } from "@/store/websocket/websocketSlice";
 
 export default function ProjectDetails() {
     const dispatch = useDispatch();
     const { projectId } = useParams();
     const selectedProject = useSelector(selectSelectedProject);
     const selectedProjectIssues = useSelector(selectSelectedProjectIssues);
-    const wsIsConnected = useSelector(selectWebsocketIsConnected);
+    const activeChatId = useSelector(selectActiveChatId);
     const [projectInveteIsOpen, setProjectInviteIsOpen] = useState(false);
-
+    const wsConnected = useSelector(selectWebsocketIsConnected);
     useEffect(() => {
         dispatch(getSelectedProjectStart(projectId));
         dispatch(getProjectIssuesStart(projectId));
         dispatch(fetchActiveChatStart(projectId));
     }, [projectId]);
+
+
+    useEffect(() => {
+        console.log("subscribe effect");
+        
+        if (!wsConnected) return;
+
+        // subscribe to THIS project chat only
+        dispatch(subscribeToTopicStart(projectId));
+
+        // unsubscribe when leaving page
+        return () => {
+            dispatch(unSubscribeFromTopicStart(projectId));
+        };
+    }, [activeChatId, wsConnected, projectId]);
+
+
 
     const onInvite = (selectedUsers) => {
         const emailList = selectedUsers?.map((user) => user.email);

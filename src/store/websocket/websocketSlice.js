@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     isConnected: false,
+    subscribedTopics: {},
 };
 
 export const websocketSlice = createSlice({
@@ -9,17 +10,26 @@ export const websocketSlice = createSlice({
     initialState,
     reducers: {
         connectWebsocketStart: (state) => {
-            state.isConnected = false;
         },
         connectWebsocketSuccess: (state) => {
+            console.log("reducer running");
+            
             state.isConnected = true;
         },
         connectWebsocketFailure: (state) => {
             state.isConnected = false;
+            state.subscribedTopics = {};
         },
         subscribeToTopicStart: (state) => { },
-        subscribeToTopicSuccess: (state) => { },
+        subscribeToTopicSuccess: (state, acction) => {
+            state.subscribedTopics[acction.payload] = true;
+        },
         subscribeToTopicFailure: (state) => { },
+        unSubscribeFromTopicStart: (state) => { },
+        unSubscribeFromTopicSuccess: (state, action) => {
+            delete state.subscribedTopics[action.payload];
+        },
+        unSubscribeFromTopicFailure: (state) => { },
     }
 });
 
@@ -32,6 +42,9 @@ export const {
     subscribeToTopicStart,
     subscribeToTopicSuccess,
     subscribeToTopicFailure,
+    unSubscribeFromTopicStart,
+    unSubscribeFromTopicSuccess,
+    unSubscribeFromTopicFailure,
 } = websocketSlice.actions;
 
 export default websocketrReducer
