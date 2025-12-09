@@ -1,5 +1,5 @@
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
-import { assignUserToIssueFailure, assignUserToIssueStart, assignUserToIssueSuccess, changeIssueStatusFailure, changeIssueStatusStart, changeIssueStatusSuccess, createIssueFailure, createIssueStart, createIssueSuccess, getProjectIssuesFailure, getProjectIssuesStart, getProjectIssuesSuccess, getSelectedIssueFailure, getSelectedIssueStart, getSelectedIssueSuccess } from "./issueSlice";
+import { assignUserToIssueFailure, assignUserToIssueStart, assignUserToIssueSuccess, changeIssueStatusFailure, changeIssueStatusStart, changeIssueStatusSuccess, createIssueFailure, createIssueStart, createIssueSuccess, getNewCreatedIssueFailure, getNewCreatedIssueStart, getNewCreatedIssueSuccess, getProjectIssuesFailure, getProjectIssuesStart, getProjectIssuesSuccess, getSelectedIssueFailure, getSelectedIssueStart, getSelectedIssueSuccess } from "./issueSlice";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
 import { selectIssueById } from "./issue.selector";
@@ -106,6 +106,24 @@ export function* getSelectedIssue(action) {
     }
 }
 
+export function* getNewCreatedIssue(action) {
+    try {
+        const res = yield call(sendAxiosGet, `issue/getIssueDetails/${action.payload}`, action.payload);
+        if(res && res.data.success){
+            yield put(getNewCreatedIssueSuccess(res.data.data));
+            toast.success(res.data.message);
+        }
+    } catch (error) {
+        console.error("Signup Error:", error); // Debugging log
+
+        const errorMessage = error.response?.data?.message || "An error occurred";
+        const errorStatus = error.response?.status || 500;
+
+        yield put(getNewCreatedIssueFailure({ message: errorMessage, status: errorStatus }));
+        toast.error(errorMessage);
+    }
+}
+
 export function* onCreateIssue() {
     yield takeLatest(createIssueStart, createIssue);
 }
@@ -126,6 +144,10 @@ export function* onGetSelectedIssue() {
     yield takeLatest(getSelectedIssueStart, getSelectedIssue);
 }
 
+export function* onGetNewCreatedIssue() {
+    yield takeLatest(getNewCreatedIssueStart, getNewCreatedIssue);
+}
+
 export function* issueSaga() {
     yield all([
         call(onCreateIssue),
@@ -133,5 +155,6 @@ export function* issueSaga() {
         call(onAssignUserToIssue),
         call(onChangeIssueStatus),
         call(onGetSelectedIssue),
+        call(onGetNewCreatedIssue),
     ]);
 }

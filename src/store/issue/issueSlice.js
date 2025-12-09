@@ -76,6 +76,17 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        getNewCreatedIssueStart: (state) => {
+            state.loading = true;
+        },
+        getNewCreatedIssueSuccess: (state, action) => {
+            state.selectedProjectIssues = [...state.selectedProjectIssues, action.payload];
+            state.loading = false;
+        },
+        getNewCreatedIssueFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
     }
 });
 
@@ -96,6 +107,9 @@ export const {
     getSelectedIssueStart,
     getSelectedIssueSuccess,
     getSelectedIssueFailure,
+    getNewCreatedIssueStart,
+    getNewCreatedIssueSuccess,
+    getNewCreatedIssueFailure,
 } = issueSlice.actions;
 
 export default issueReducer;

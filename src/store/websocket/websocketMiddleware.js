@@ -13,6 +13,8 @@ import {
 import { Client } from "@stomp/stompjs";
 import { receiveNotificationSuccess } from "../notification/notificationSlice";
 import { receiveMessage } from "../chat/chatSlice";
+import { selectSelectedProject } from "../project/project.selector";
+import { getNewCreatedIssueStart } from "../issue/issueSlice";
 
 let client = null;
 let isConnecting = false;
@@ -51,6 +53,12 @@ const websocketMiddleware = (store) => (next) => (action) => {
             notification.metadata = JSON.parse(notification.metadata);
           }
           store.dispatch(receiveNotificationSuccess(notification));
+
+          if(notification.type == "ISSUE_CREATED"){
+            const selectedProjectId = selectSelectedProject(store.getState())?.id;
+            if(notification.metadata.projectId == selectedProjectId)
+              store.dispatch(getNewCreatedIssueStart(notification.metadata.issueId));
+          }
         });
 
         store.dispatch(connectWebsocketSuccess());

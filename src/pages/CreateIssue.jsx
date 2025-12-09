@@ -19,7 +19,12 @@ const CreateIssue = ({ open, setOpen, projectId }) => {
             title: formInput.title,
             description: formInput.description,
             projectId,
-        }))
+        }));
+        setFormInput({
+            title: "",
+            description: "",
+        })
+        setOpen(false);
     };
 
     return (
