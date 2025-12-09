@@ -43,6 +43,7 @@ export const projectSlice = createSlice({
         },
         getSelectedProjectFailure: (state, action) => {
             state.error = action.payload;
+            state.selectedProject = null;
             state.loading = false;
         },
         sendProjectInvitationStart: (state) => {

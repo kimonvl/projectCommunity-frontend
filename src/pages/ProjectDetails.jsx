@@ -39,15 +39,19 @@ export default function ProjectDetails() {
         if (!wsConnected) return;
 
         // subscribe to THIS project chat only
-        dispatch(subscribeToTopicStart(projectId));
+        dispatch(subscribeToTopicStart(activeChatId));
 
         // unsubscribe when leaving page
         return () => {
-            dispatch(unSubscribeFromTopicStart(projectId));
-            dispatch(clearSelectedProject());
+            dispatch(unSubscribeFromTopicStart(activeChatId));
         };
     }, [activeChatId, wsConnected, projectId]);
 
+useEffect(() => {
+    return () => {
+        dispatch(clearSelectedProject());
+    };
+}, [dispatch]);
 
 
     const onInvite = (selectedUsers) => {
