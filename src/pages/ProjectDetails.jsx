@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getSelectedProjectStart } from "@/store/project/projectSlice";
+import { clearSelectedProject, getSelectedProjectStart } from "@/store/project/projectSlice";
 import { selectSelectedProject } from "@/store/project/project.selector";
 import { Loader2 } from "lucide-react";
 import { sendProjectInvitationStart } from "@/store/project/projectSlice";
@@ -44,6 +44,7 @@ export default function ProjectDetails() {
         // unsubscribe when leaving page
         return () => {
             dispatch(unSubscribeFromTopicStart(projectId));
+            dispatch(clearSelectedProject());
         };
     }, [activeChatId, wsConnected, projectId]);
 

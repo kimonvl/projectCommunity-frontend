@@ -66,6 +66,9 @@ export const projectSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        clearSelectedProject: (state) => {
+            state.selectedProject = null;
+        }
     }
 });
 
@@ -86,6 +89,7 @@ export const {
     acceptProjectInvitationStart,
     acceptProjectInvitationSuccess,
     acceptProjectInvitationFailure,
+    clearSelectedProject,
 } = projectSlice.actions;
 
 export default projectReducer;
