@@ -12,6 +12,7 @@ import {
 } from "./websocketSlice";
 import { Client } from "@stomp/stompjs";
 import { receiveNotificationSuccess } from "../notification/notificationSlice";
+import { receiveMessage } from "../chat/chatSlice";
 
 let client = null;
 let isConnecting = false;
@@ -95,7 +96,8 @@ const websocketMiddleware = (store) => (next) => (action) => {
 
       const sub = client.subscribe(`/topic/chat/${chatId}`, (msg) => {
         console.log("[WS] chat message", msg);
-        // you can dispatch chat messages here if needed
+        const message = JSON.parse(msg.body);
+        store.dispatch(receiveMessage(message));
       });
 
       activeSubscription[chatId] = sub;

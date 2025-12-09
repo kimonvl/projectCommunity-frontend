@@ -25,12 +25,14 @@ export const chatSlice = createSlice({
             state.loading = true;
         },
         sendMessageSuccess: (state, action) => {
-            state.activeChat.messages = [...state.activeChat.messages, action.payload];
             state.loading = false;
         },
         sendMessageFailure: (state, action) => {
             state.error = action.payload;
             state.loading = false;
+        },
+        receiveMessage: (state, action) => {
+            state.activeChat.messages = [...state.activeChat.messages, action.payload];
         },
     }
 })
@@ -43,6 +45,7 @@ export const {
     sendMessageStart,
     sendMessageSuccess,
     sendMessageFailure,
+    receiveMessage,
 } = chatSlice.actions;
 
 export default chatReducer;
