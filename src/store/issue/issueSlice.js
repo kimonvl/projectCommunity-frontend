@@ -53,14 +53,21 @@ export const issueSlice = createSlice({
             state.loading = true;
         },
         changeIssueStatusSuccess: (state, action) => {
-            state.selectedProjectIssues = state.selectedProjectIssues.map((issue) => {
-                if (issue.id == action.payload.id) {
-                    return action.payload;
-                }
-                return issue;
-            });
+            const updated = action.payload;
+
+            // update list
+            state.selectedProjectIssues = state.selectedProjectIssues.map((issue) =>
+                issue.id === updated.id ? updated : issue
+            );
+
+            // update selectedIssue if it's the same one
+            if (state.selectedIssue?.id === updated.id) {
+                state.selectedIssue = updated;
+            }
+
             state.loading = false;
         },
+
         changeIssueStatusFailure: (state, action) => {
             state.error = action.payload;
             state.loading = false;
