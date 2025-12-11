@@ -1,8 +1,10 @@
 import { all, call, put, select, takeLatest } from "redux-saga/effects";
-import { assignUserToIssueFailure, assignUserToIssueStart, assignUserToIssueSuccess, changeIssueStatusFailure, changeIssueStatusStart, changeIssueStatusSuccess, createIssueFailure, createIssueStart, createIssueSuccess, getNewCreatedIssueFailure, getNewCreatedIssueStart, getNewCreatedIssueSuccess, getProjectIssuesFailure, getProjectIssuesStart, getProjectIssuesSuccess, getSelectedIssueFailure, getSelectedIssueStart, getSelectedIssueSuccess } from "./issueSlice";
+import { assignUserToIssueFailure, assignUserToIssueStart, assignUserToIssueSuccess, changeIssueStatusFailure, changeIssueStatusStart, changeIssueStatusSuccess, createIssueFailure, createIssueStart, createIssueSuccess, deleteIssueFailure, deleteIssueStart, deleteIssueSuccess, getNewCreatedIssueFailure, getNewCreatedIssueStart, getNewCreatedIssueSuccess, getProjectIssuesFailure, getProjectIssuesStart, getProjectIssuesSuccess, getSelectedIssueFailure, getSelectedIssueStart, getSelectedIssueSuccess } from "./issueSlice";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
-import { selectIssueById } from "./issue.selector";
+import { selectIssueById, selectSelectedIssue } from "./issue.selector";
+import { selectActiveChatId } from "../chat/chat.selector";
+import { selectSelectedProjectId } from "../project/project.selector";
 
 export function* createIssue(action) {
     try {
@@ -124,6 +126,27 @@ export function* getNewCreatedIssue(action) {
     }
 }
 
+export function* deleteIssue(action) {
+    try {
+        const res = yield call(sendAxiosPostJson, `issue/delete`, action.payload.issueId);
+        if(res && res.data.success){
+            const selectedIssue = yield select(selectSelectedIssue);
+            action.payload.navigate(`/projectDetails/${selectedIssue.projectId}`);
+            yield put(deleteIssueSuccess(res.data.data));
+            toast.success(res.data.message);
+            ;
+        }
+    } catch (error) {
+        console.error("Signup Error:", error); // Debugging log
+
+        const errorMessage = error.response?.data?.message || "An error occurred";
+        const errorStatus = error.response?.status || 500;
+
+        yield put(deleteIssueFailure({ message: errorMessage, status: errorStatus }));
+        toast.error(errorMessage);
+    }
+}
+
 export function* onCreateIssue() {
     yield takeLatest(createIssueStart, createIssue);
 }
@@ -148,6 +171,10 @@ export function* onGetNewCreatedIssue() {
     yield takeLatest(getNewCreatedIssueStart, getNewCreatedIssue);
 }
 
+export function* onDeleteIssue() {
+    yield takeLatest(deleteIssueStart, deleteIssue);
+}
+
 export function* issueSaga() {
     yield all([
         call(onCreateIssue),
@@ -156,5 +183,6 @@ export function* issueSaga() {
         call(onChangeIssueStatus),
         call(onGetSelectedIssue),
         call(onGetNewCreatedIssue),
+        call(onDeleteIssue),
     ]);
 }

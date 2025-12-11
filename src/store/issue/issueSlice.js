@@ -94,6 +94,20 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
+        deleteIssueStart: (state) => {
+            state.loading = true;
+        },
+        deleteIssueSuccess: (state, action) => {
+            state.selectedProjectIssues = state.selectedProjectIssues.filter((issue) => issue.id != action.payload);
+            state.loading = false;
+        },
+        deleteIssueFailure: (state, action) => {
+            state.error = action.payload;
+            state.loading = false;
+        },
+        clearSelectedIssue: (state) => {
+            state.selectedIssue = null;
+        }
     }
 });
 
@@ -117,6 +131,10 @@ export const {
     getNewCreatedIssueStart,
     getNewCreatedIssueSuccess,
     getNewCreatedIssueFailure,
+    deleteIssueStart,
+    deleteIssueSuccess,
+    deleteIssueFailure,
+    clearSelectedIssue,
 } = issueSlice.actions;
 
 export default issueReducer;

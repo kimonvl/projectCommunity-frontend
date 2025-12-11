@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
 import { selectCurrentUserEmail } from "@/store/auth/auth.selector";
@@ -6,19 +6,26 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 import { selectIssueById, selectSelectedIssue } from "@/store/issue/issue.selector";
-import { changeIssueStatusStart, getSelectedIssueStart } from "@/store/issue/issueSlice";
+import { changeIssueStatusStart, clearSelectedIssue, deleteIssueStart, getSelectedIssueStart } from "@/store/issue/issueSlice";
 import { selectSelectedIssueComments } from "@/store/comment/comment.selector";
 import { createCommentStart, getIssueCommentsStart } from "@/store/comment/commentSlice";
 import { getIssueComments } from "@/store/comment/comment.saga";
 import CommentCard from "@/components/comment/CommentCard";
 
 export default function IssueDetails() {
-    const { issueId } = useParams();
+    const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { issueId } = useParams();
     const issue = useSelector(selectSelectedIssue);
     const currentUserEmail = useSelector(selectCurrentUserEmail);
     const comments = useSelector(selectSelectedIssueComments);
     const [comment, setComment] = useState("");
+
+    useEffect(() => {
+        return () => {
+            dispatch(clearSelectedIssue());
+        };
+    }, [])
 
     useEffect(() => {
         dispatch(getSelectedIssueStart(issueId))
@@ -34,6 +41,10 @@ export default function IssueDetails() {
                 status: newStatus
             }));
         }
+    }
+
+    const handleIssueDelete = () => {
+        dispatch(deleteIssueStart({issueId, navigate}))
     }
 
     const handleSendComment = () => {
@@ -204,6 +215,9 @@ export default function IssueDetails() {
 
                     </div>
 
+                </div>
+                <div className="float-right">
+                    <Button onClick={handleIssueDelete}>Delete</Button>
                 </div>
             </div>
 

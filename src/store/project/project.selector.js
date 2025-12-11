@@ -12,6 +12,11 @@ export const selectSelectedProject = createSelector(
     (projectSlice) => projectSlice.selectedProject
 );
 
+export const selectSelectedProjectId = createSelector(
+    [selectProjectReducer],
+    (projectSlice) => projectSlice.selectedProject.id
+);
+
 export const selectProjectLoading = createSelector(
     [selectProjectReducer],
     (projectSlice) => projectSlice.loading
