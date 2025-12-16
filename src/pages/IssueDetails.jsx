@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect, useState } from "react";
-import { selectCurrentUserEmail } from "@/store/auth/auth.selector";
+import { selectCurrentUserEmail, selectCurrentUserId } from "@/store/auth/auth.selector";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
@@ -18,6 +18,7 @@ export default function IssueDetails() {
     const { issueId } = useParams();
     const issue = useSelector(selectSelectedIssue);
     const currentUserEmail = useSelector(selectCurrentUserEmail);
+    const currentUserId = useSelector(selectCurrentUserId);
     const comments = useSelector(selectSelectedIssueComments);
     const [comment, setComment] = useState("");
 
@@ -44,7 +45,7 @@ export default function IssueDetails() {
     }
 
     const handleIssueDelete = () => {
-        dispatch(deleteIssueStart({issueId, navigate}))
+        dispatch(deleteIssueStart({issueId, navigate}));
     }
 
     const handleSendComment = () => {
@@ -217,7 +218,9 @@ export default function IssueDetails() {
 
                 </div>
                 <div className="float-right">
-                    <Button onClick={handleIssueDelete}>Delete</Button>
+                {
+                    issue.creator.id == currentUserId && <Button onClick={handleIssueDelete}>Delete</Button>
+                }
                 </div>
             </div>
 
