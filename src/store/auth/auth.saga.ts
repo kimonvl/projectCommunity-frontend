@@ -4,12 +4,14 @@ import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
 import { connectWebsocketStart } from "../websocket/websocketSlice";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { LoginPayload, SignUpPayload } from "./auth.types";
+import { LoginPayload, SignUpPayload, User } from "./auth.types";
 import { SagaIterator } from "redux-saga";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
 
 export function* signUp(action: PayloadAction<SignUpPayload>): SagaIterator {
     try {
-        const res: any = yield call(sendAxiosPostJson, "register", action.payload)
+        const res: AxiosResponse<ApiResponse<User>> = yield call(sendAxiosPostJson<User, SignUpPayload>, "register", action.payload)
         if(res && res.data.success){
             yield put(signUpSuccess());
             toast.success(res.data.message);
@@ -27,7 +29,7 @@ export function* signUp(action: PayloadAction<SignUpPayload>): SagaIterator {
 
 export function* login(action: PayloadAction<LoginPayload>): SagaIterator {
     try {
-        const res: any = yield call(sendAxiosPostJson, "login", action.payload)        
+        const res: AxiosResponse<ApiResponse<User>> = yield call(sendAxiosPostJson<User, LoginPayload>, "login", action.payload)        
         if(res && res.data.success){
             yield put(loginSuccess(res.data.data));
             yield put(connectWebsocketStart());
@@ -46,7 +48,7 @@ export function* login(action: PayloadAction<LoginPayload>): SagaIterator {
 
 export function* logout(): SagaIterator {
     try {
-        const res: any = yield call(sendAxiosPostJson, "log-out")
+        const res: AxiosResponse<ApiResponse<void>> = yield call(sendAxiosPostJson<void, void>, "log-out")
         if(res && res.data.success){
             yield put(logoutSuccess());
             toast.success(res.data.message);
@@ -64,7 +66,7 @@ export function* logout(): SagaIterator {
 
 export function* isAuthenticated(): SagaIterator {
     try {
-        const res: any = yield call(sendAxiosGet, "isAuthenticated")
+        const res: AxiosResponse<ApiResponse<User>> = yield call(sendAxiosGet<User>, "isAuthenticated")
         if(res && res.data.success){
             yield put(isAuthenticatedSuccess(res.data.data));
             toast.success(res.data.message);
