@@ -1,7 +1,9 @@
 import { createSelector } from "reselect";
+import { RootState } from "../store";
+import { Issue, IssueState } from "./issue.types";
 
-const selectIssueReducer = (state) => state.issue;
-const selectProjectIssues = (state) => state.issue.selectedProjectIssues;
+const selectIssueReducer = (state: RootState): IssueState => state.issue;
+const selectProjectIssues = (state: RootState): Issue[] => state.issue.selectedProjectIssues;
 
 export const selectSelectedProjectIssues = createSelector(
     [selectProjectIssues],
@@ -19,7 +21,7 @@ export const selectSelectedIssue = createSelector(
     (issueSlice) => issueSlice.selectedIssue
 );
 
-export const selectIssueById = (issueId) =>
+export const selectIssueById = (issueId: number) =>
     createSelector(
         [selectProjectIssues],
         (issues) => issues?.find(i => i.id === Number(issueId))

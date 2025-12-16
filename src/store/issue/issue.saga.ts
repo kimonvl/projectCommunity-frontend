@@ -3,17 +3,21 @@ import { assignUserToIssueFailure, assignUserToIssueStart, assignUserToIssueSucc
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
 import { selectIssueById, selectSelectedIssue } from "./issue.selector";
-import { selectActiveChatId } from "../chat/chat.selector";
-import { selectSelectedProjectId } from "../project/project.selector";
+import { SagaIterator } from "redux-saga";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { AssignUserToIssueRequest, ChangeIssueStatusRequest, CreateIssueRequest, DeleteIssuePayload } from "@/types/requests/issue";
+import { Issue } from "./issue.types";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
 
-export function* createIssue(action) {
+export function* createIssue(action: PayloadAction<CreateIssueRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, `issue/create`, action.payload);
+        const res: AxiosResponse<ApiResponse<Issue>> = yield call(sendAxiosPostJson<Issue, CreateIssueRequest>, `issue/create`, action.payload);
         if(res && res.data.success){
             yield put(createIssueSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -24,14 +28,14 @@ export function* createIssue(action) {
     }
 }
 
-export function* getProjectIssues(action) {
+export function* getProjectIssues(action: PayloadAction<number>): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, `issue/getProjectIssues/${action.payload}`);
+        const res: AxiosResponse<ApiResponse<Issue[]>> = yield call(sendAxiosGet<Issue[]>, `issue/getProjectIssues/${action.payload}`);
         if(res && res.data.success){
             yield put(getProjectIssuesSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -42,18 +46,14 @@ export function* getProjectIssues(action) {
     }
 }
 
-export function* assignUserToIssue(action) {
+export function* assignUserToIssue(action: PayloadAction<AssignUserToIssueRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, `issue/assignUser`, action.payload);
+        const res: AxiosResponse<ApiResponse<Issue>> = yield call(sendAxiosPostJson<Issue, AssignUserToIssueRequest>, `issue/assignUser`, action.payload);
         if(res && res.data.success){
-            const result = {
-                assignedUser: res.data.data,
-                issueId: action.payload.issueId,
-            }
-            yield put(assignUserToIssueSuccess(result));
+            yield put(assignUserToIssueSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -64,14 +64,14 @@ export function* assignUserToIssue(action) {
     }
 }
 
-export function* changeIssueStatus(action) {
+export function* changeIssueStatus(action: PayloadAction<ChangeIssueStatusRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, `issue/changeStatus`, action.payload);
+        const res: AxiosResponse<ApiResponse<Issue>> = yield call(sendAxiosPostJson<Issue, ChangeIssueStatusRequest>, `issue/changeStatus`, action.payload);
         if(res && res.data.success){
             yield put(changeIssueStatusSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -82,11 +82,11 @@ export function* changeIssueStatus(action) {
     }
 }
 
-export function* getSelectedIssue(action) {
+export function* getSelectedIssue(action: PayloadAction<number>): SagaIterator {
     try {
-        const issue = yield select(selectIssueById(action.payload));
+        const issue: Issue = yield select(selectIssueById(action.payload));
         if (issue == null) {
-            const res = yield call(sendAxiosGet, `issue/getIssueDetails/${action.payload}`);
+            const res: AxiosResponse<ApiResponse<Issue>> = yield call(sendAxiosGet<Issue>, `issue/getIssueDetails/${action.payload}`);
             console.log("issue from fetch", res);
             if(res && res.data.success){
                 yield put(getSelectedIssueSuccess(res.data.data));
@@ -97,7 +97,7 @@ export function* getSelectedIssue(action) {
             
             yield put(getSelectedIssueSuccess(issue));
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -108,14 +108,14 @@ export function* getSelectedIssue(action) {
     }
 }
 
-export function* getNewCreatedIssue(action) {
+export function* getNewCreatedIssue(action: PayloadAction<number>): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, `issue/getIssueDetails/${action.payload}`, action.payload);
+        const res: AxiosResponse<ApiResponse<Issue>> = yield call(sendAxiosGet<Issue>, `issue/getIssueDetails/${action.payload}`);
         if(res && res.data.success){
             yield put(getNewCreatedIssueSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -126,9 +126,9 @@ export function* getNewCreatedIssue(action) {
     }
 }
 
-export function* deleteIssue(action) {
+export function* deleteIssue(action: PayloadAction<DeleteIssuePayload>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, `issue/delete`, action.payload.issueId);
+        const res: AxiosResponse<ApiResponse<number>> = yield call(sendAxiosPostJson<number, number>, `issue/delete`, action.payload.issueId);
         if(res && res.data.success){
             const selectedIssue = yield select(selectSelectedIssue);
             action.payload.navigate(`/projectDetails/${selectedIssue.projectId}`);
@@ -136,7 +136,7 @@ export function* deleteIssue(action) {
             toast.success(res.data.message);
             ;
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -147,35 +147,35 @@ export function* deleteIssue(action) {
     }
 }
 
-export function* onCreateIssue() {
-    yield takeLatest(createIssueStart, createIssue);
+export function* onCreateIssue(): SagaIterator {
+    yield takeLatest(createIssueStart.type, createIssue);
 }
 
-export function* onGetProjectIssues() {
-    yield takeLatest(getProjectIssuesStart, getProjectIssues);
+export function* onGetProjectIssues(): SagaIterator {
+    yield takeLatest(getProjectIssuesStart.type, getProjectIssues);
 }
 
-export function* onAssignUserToIssue() {
-    yield takeLatest(assignUserToIssueStart, assignUserToIssue);
+export function* onAssignUserToIssue(): SagaIterator {
+    yield takeLatest(assignUserToIssueStart.type, assignUserToIssue);
 }
 
-export function* onChangeIssueStatus() {
-    yield takeLatest(changeIssueStatusStart, changeIssueStatus);
+export function* onChangeIssueStatus(): SagaIterator {
+    yield takeLatest(changeIssueStatusStart.type, changeIssueStatus);
 }
 
-export function* onGetSelectedIssue() {
-    yield takeLatest(getSelectedIssueStart, getSelectedIssue);
+export function* onGetSelectedIssue(): SagaIterator {
+    yield takeLatest(getSelectedIssueStart.type, getSelectedIssue);
 }
 
-export function* onGetNewCreatedIssue() {
-    yield takeLatest(getNewCreatedIssueStart, getNewCreatedIssue);
+export function* onGetNewCreatedIssue(): SagaIterator {
+    yield takeLatest(getNewCreatedIssueStart.type, getNewCreatedIssue);
 }
 
-export function* onDeleteIssue() {
-    yield takeLatest(deleteIssueStart, deleteIssue);
+export function* onDeleteIssue(): SagaIterator {
+    yield takeLatest(deleteIssueStart.type, deleteIssue);
 }
 
-export function* issueSaga() {
+export function* issueSaga(): SagaIterator {
     yield all([
         call(onCreateIssue),
         call(onGetProjectIssues),

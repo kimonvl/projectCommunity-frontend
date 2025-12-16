@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Issue, IssueError, IssueState } from "./issue.types";
 
-const initialState = {
+const initialState: IssueState = {
     selectedProjectIssues: [],
     selectedIssue: null,
     loading: false,
@@ -14,45 +15,45 @@ export const issueSlice = createSlice({
         createIssueStart: (state) => {
             state.loading = true;
         },
-        createIssueSuccess: (state, action) => {
+        createIssueSuccess: (state, action: PayloadAction<Issue>) => {
             state.selectedProjectIssues = [...state.selectedProjectIssues, action.payload];
             state.loading = false;
         },
-        createIssueFailure: (state, action) => {
+        createIssueFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         getProjectIssuesStart: (state) => {
             state.loading = true;
         },
-        getProjectIssuesSuccess: (state, action) => {
+        getProjectIssuesSuccess: (state, action: PayloadAction<Issue[]>) => {
             state.selectedProjectIssues = action.payload;
             state.loading = false;
         },
-        getProjectIssuesFailure: (state, action) => {
+        getProjectIssuesFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         assignUserToIssueStart: (state) => {
             state.loading = true;
         },
-        assignUserToIssueSuccess: (state, action) => {
+        assignUserToIssueSuccess: (state, action: PayloadAction<Issue>) => {
             state.selectedProjectIssues = state.selectedProjectIssues.map((issue) => {
-                if (issue.id == action.payload.issueId) {
-                    issue.assignedUsers = [...issue.assignedUsers, action.payload.assignedUser]
+                if (issue.id == action.payload.id) {
+                    return action.payload;
                 }
                 return issue;
             });
             state.loading = false;
         },
-        assignUserToIssueFailure: (state, action) => {
+        assignUserToIssueFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         changeIssueStatusStart: (state) => {
             state.loading = true;
         },
-        changeIssueStatusSuccess: (state, action) => {
+        changeIssueStatusSuccess: (state, action: PayloadAction<Issue>) => {
             const updated = action.payload;
 
             // update list
@@ -68,40 +69,40 @@ export const issueSlice = createSlice({
             state.loading = false;
         },
 
-        changeIssueStatusFailure: (state, action) => {
+        changeIssueStatusFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         getSelectedIssueStart: (state) => {
             state.loading = true;
         },
-        getSelectedIssueSuccess: (state, action) => {
+        getSelectedIssueSuccess: (state, action: PayloadAction<Issue>) => {
             state.selectedIssue = action.payload;
             state.loading = false;
         },
-        getSelectedIssueFailure: (state, action) => {
+        getSelectedIssueFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         getNewCreatedIssueStart: (state) => {
             state.loading = true;
         },
-        getNewCreatedIssueSuccess: (state, action) => {
+        getNewCreatedIssueSuccess: (state, action: PayloadAction<Issue>) => {
             state.selectedProjectIssues = [...state.selectedProjectIssues, action.payload];
             state.loading = false;
         },
-        getNewCreatedIssueFailure: (state, action) => {
+        getNewCreatedIssueFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         deleteIssueStart: (state) => {
             state.loading = true;
         },
-        deleteIssueSuccess: (state, action) => {
+        deleteIssueSuccess: (state, action: PayloadAction<number>) => {
             state.selectedProjectIssues = state.selectedProjectIssues.filter((issue) => issue.id != action.payload);
             state.loading = false;
         },
-        deleteIssueFailure: (state, action) => {
+        deleteIssueFailure: (state, action: PayloadAction<IssueError>) => {
             state.error = action.payload;
             state.loading = false;
         },
