@@ -2,19 +2,21 @@ import { all, call, put, select, take, takeLatest } from "redux-saga/effects";
 import { fetchActiveChatFailure, fetchActiveChatStart, fetchActiveChatSuccess, sendMessageFailure, sendMessageStart, sendMessageSuccess } from "./chatSlice";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
-import { selectCurrentUserId } from "../auth/auth.selector";
-import { selectActiveChatId } from "./chat.selector";
-import { connectWebsocketSuccess, subscribeToTopicStart } from "../websocket/websocketSlice";
-import { selectWebsocketIsConnected } from "../websocket/websocket.selector";
+import { SagaIterator } from "redux-saga";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
+import { Chat, Message } from "./chat.types";
+import { SendMessageRequest } from "@/types/requests/chat";
 
-export function* fetchActiveChat(action) {
+export function* fetchActiveChat(action: PayloadAction<number>): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, `chat/activeChat/${action.payload}`);        
+        const res: AxiosResponse<ApiResponse<Chat>> = yield call(sendAxiosGet<Chat>, `chat/activeChat/${action.payload}`);        
         if(res && res.data.success){
             yield put(fetchActiveChatSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -25,15 +27,15 @@ export function* fetchActiveChat(action) {
     }
 }
 
-export function* sendMessage(action) {
+export function* sendMessage(action: PayloadAction<SendMessageRequest>): SagaIterator {
     try {
-        const senderId = yield select(selectCurrentUserId);
-        const res = yield call(sendAxiosPostJson, `chat/sendMessage`, action.payload);    
+        // fix the inconcistancy backend sends created message, front end recieves the message from ws from topic
+        const res: AxiosResponse<ApiResponse<Message>> = yield call(sendAxiosPostJson, `chat/sendMessage`, action.payload);    
         if(res && res.data.success){
-            yield put(sendMessageSuccess(res.data.data));
+            yield put(sendMessageSuccess());
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -44,15 +46,15 @@ export function* sendMessage(action) {
     }
 }
 
-export function* onFetchActiveChat() {
-    yield takeLatest(fetchActiveChatStart, fetchActiveChat);
+export function* onFetchActiveChat(): SagaIterator {
+    yield takeLatest(fetchActiveChatStart.type, fetchActiveChat);
 }
 
-export function* onSendMessage() {
-    yield takeLatest(sendMessageStart, sendMessage);
+export function* onSendMessage(): SagaIterator {
+    yield takeLatest(sendMessageStart.type, sendMessage);
 }
 
-export function* chatSaga() {
+export function* chatSaga(): SagaIterator {
     yield all([
         call(onFetchActiveChat),
         call(onSendMessage),

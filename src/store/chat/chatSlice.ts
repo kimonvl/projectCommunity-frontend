@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Chat, ChatError, ChatState, Message } from "./chat.types";
 
-const initialState = {
+const initialState: ChatState = {
     activeChat: null,
     loading: false,
     error: null,
@@ -13,25 +14,24 @@ export const chatSlice = createSlice({
         fetchActiveChatStart: (state) => {
             state.loading = true;
         },
-        fetchActiveChatSuccess: (state, action) => {
+        fetchActiveChatSuccess: (state, action: PayloadAction<Chat>) => {
             state.activeChat = action.payload;
             state.loading = false;
         },
-        fetchActiveChatFailure: (state, action) => {
+        fetchActiveChatFailure: (state, action: PayloadAction<ChatError>) => {
             state.error = action.payload;
             state.loading = false;
         },
-        sendMessageStart: (state) => {
-            state.loading = true;
+        sendMessageStart: () => {
         },
-        sendMessageSuccess: (state, action) => {
-            state.loading = false;
+        sendMessageSuccess: () => {
         },
-        sendMessageFailure: (state, action) => {
+        sendMessageFailure: (state, action: PayloadAction<ChatError>) => {
             state.error = action.payload;
-            state.loading = false;
         },
-        receiveMessage: (state, action) => {
+        receiveMessage: (state, action: PayloadAction<Message>) => {
+            if (!state.activeChat) return;
+            
             state.activeChat.messages = [...state.activeChat.messages, action.payload];
         },
     }

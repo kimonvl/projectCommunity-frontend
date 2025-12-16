@@ -67,6 +67,7 @@ export const authSlice = createSlice({
     }
 });
 
+const authReducer = authSlice.reducer;
 export const {
     signUpStart,
     signUpSuccess,
@@ -82,4 +83,4 @@ export const {
     isAuthenticatedFailure,
 } = authSlice.actions;
 
-export default authSlice.reducer;
+export default authReducer;
