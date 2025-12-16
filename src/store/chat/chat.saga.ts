@@ -30,7 +30,7 @@ export function* fetchActiveChat(action: PayloadAction<number>): SagaIterator {
 export function* sendMessage(action: PayloadAction<SendMessageRequest>): SagaIterator {
     try {
         // fix the inconcistancy backend sends created message, front end recieves the message from ws from topic
-        const res: AxiosResponse<ApiResponse<Message>> = yield call(sendAxiosPostJson, `chat/sendMessage`, action.payload);    
+        const res: AxiosResponse<ApiResponse<Message>> = yield call(sendAxiosPostJson<Message, SendMessageRequest>, `chat/sendMessage`, action.payload);    
         if(res && res.data.success){
             yield put(sendMessageSuccess());
             toast.success(res.data.message);

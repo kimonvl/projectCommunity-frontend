@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Comment, CommentError, CommentState } from "./comment.types";
 
-const initialState = {
+const initialState: CommentState = {
     selectedIssueComments: [],
     loading: false,
     error: null,
@@ -13,22 +14,22 @@ export const commentSlice = createSlice({
         getIssueCommentsStart: (state) => {
             state.loading = true;
         },
-        getIssueCommentsSuccess: (state, action) => {
+        getIssueCommentsSuccess: (state, action: PayloadAction<Comment[]>) => {
             state.selectedIssueComments = action.payload;
             state.loading = false;
         },
-        getIssueCommentsFailure: (state, action) => {
+        getIssueCommentsFailure: (state, action: PayloadAction<CommentError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         createCommentStart: (state) => {
             state.loading = true;
         },
-        createCommentSuccess: (state, action) => {
+        createCommentSuccess: (state, action: PayloadAction<Comment>) => {
             state.selectedIssueComments = [...state.selectedIssueComments, action.payload];
             state.loading = false;
         },
-        createCommentFailure: (state, action) => {
+        createCommentFailure: (state, action: PayloadAction<CommentError>) => {
             state.error = action.payload;
             state.loading = false;
         },
