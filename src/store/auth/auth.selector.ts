@@ -1,27 +1,28 @@
 import { createSelector } from "reselect";
+import { RootState } from "../store";
 
-const selectAuthReducer = (state) => state.auth;
+const selectAuthReducer = (state: RootState) => state.auth;
 
 export const selectCurrentUser = createSelector(
     [selectAuthReducer],
-    (userSlice) => userSlice.user
+    (authSlice) => authSlice.user
 );
 
 export const selectCurrentUserId = createSelector(
     [selectAuthReducer],
-    (userSlice) => userSlice.user.id
+    (authSlice) => authSlice.user?.id ?? null
 );
 export const selectCurrentUserEmail = createSelector(
     [selectAuthReducer],
-    (userSlice) => userSlice.user.email
+    (authSlice) => authSlice.user?.email ?? null
 );
 
 export const selectIsAuthenticated = createSelector(
     [selectAuthReducer],
-    (userSlice) => userSlice.isAuthenticated
+    (authSlice) => authSlice.isAuthenticated
 );
 
 export const selectLoading = createSelector(
     [selectAuthReducer],
-    (userSlice) => userSlice.loading
+    (authSlice) => authSlice.loading
 );

@@ -1,11 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AuthError, AuthState, User } from "./auth.types";
 
-const initialState = {
+const initialState: AuthState = {
     user: null,
     isAuthenticated: false,
     loading: false,
     error: null,
-};
+}
 
 export const authSlice = createSlice({
     name: 'auth',
@@ -14,22 +15,22 @@ export const authSlice = createSlice({
         signUpStart: (state) => {
             state.loading = true;
         },
-        signUpSuccess: (state, action) => {
+        signUpSuccess: (state) => {
             state.loading = false;
         },
-        signUpFailure: (state, action) => {
+        signUpFailure: (state, action: PayloadAction<AuthError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         loginStart: (state) => {
             state.loading = true;
         },
-        loginSuccess: (state, action) => {
+        loginSuccess: (state, action: PayloadAction<User>) => {
             state.loading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
         },
-        loginFailure: (state, action) => {
+        loginFailure: (state, action: PayloadAction<AuthError>) => {
             state.loading = false;
             state.isAuthenticated = false;
             state.user = null;
@@ -38,12 +39,12 @@ export const authSlice = createSlice({
         logoutStart: (state) => {
             state.loading = true;
         },
-        logoutSuccess: (state, action) => {
+        logoutSuccess: (state) => {
             state.loading = false;
             state.user = null;
             state.isAuthenticated = false;
         },
-        logoutFailure: (state, action) => {
+        logoutFailure: (state, action: PayloadAction<AuthError>) => {
             state.loading = false;
             state.isAuthenticated = false;
             state.user = null;
@@ -52,12 +53,12 @@ export const authSlice = createSlice({
         isAuthenticatedStart: (state) => {
             state.loading = true;
         },
-        isAuthenticatedSuccess: (state, action) => {
+        isAuthenticatedSuccess: (state, action: PayloadAction<User>) => {
             state.loading = false;
             state.user = action.payload;
             state.isAuthenticated = true;
         },
-        isAuthenticatedFailure: (state, action) => {
+        isAuthenticatedFailure: (state, action: PayloadAction<AuthError>) => {
             state.loading = false;
             state.isAuthenticated = false;
             state.user = null;
@@ -65,8 +66,6 @@ export const authSlice = createSlice({
         },
     }
 });
-
-const authReducer = authSlice.reducer;
 
 export const {
     signUpStart,
@@ -83,4 +82,4 @@ export const {
     isAuthenticatedFailure,
 } = authSlice.actions;
 
-export default authReducer;
+export default authSlice.reducer;
