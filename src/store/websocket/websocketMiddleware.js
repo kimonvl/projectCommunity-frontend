@@ -49,9 +49,6 @@ const websocketMiddleware = (store) => (next) => (action) => {
         // notifications
         client.subscribe("/user/queue/notifications", (msg) => {
           const notification = JSON.parse(msg.body);
-          if (notification.metadata) {
-            notification.metadata = JSON.parse(notification.metadata);
-          }
           store.dispatch(receiveNotificationSuccess(notification));
 
           if(notification.type == "ISSUE_CREATED"){

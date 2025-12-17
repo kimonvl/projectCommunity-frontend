@@ -2,21 +2,21 @@ import { all, call, put, takeLatest } from "redux-saga/effects";
 import { getUnseenNotificationsFailure, getUnseenNotificationsStart, getUnseenNotificationsSuccess, markAsSeenNotificationFailure, markAsSeenNotificationStart, markAsSeenNotificationSuccess} from "./notificationSlice";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { toast } from "sonner";
+import { SagaIterator } from "redux-saga";
+import { Notification } from "./notification.types";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
+import { PayloadAction } from "@reduxjs/toolkit";
 
-export function* getUnseenNotifications(action) {
+export function* getUnseenNotifications(): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, "notification/getUnseenNotifications");
-        console.log(res);
+        const res: AxiosResponse<ApiResponse<Notification[]>> = yield call(sendAxiosGet<Notification[]>, "notification/getUnseenNotifications");
         
         if(res && res.data.success){
-            const notifications = res.data.data.map((notification) => {
-                notification.metadata = JSON.parse(notification.metadata);
-                return notification;
-            })
-            yield put(getUnseenNotificationsSuccess(notifications));
+            yield put(getUnseenNotificationsSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -27,14 +27,14 @@ export function* getUnseenNotifications(action) {
     }
 }
 
-export function* markAsSeenNotification(action) {
+export function* markAsSeenNotification(action: PayloadAction<number>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, "notification/markAsSeen", action.payload);
+        const res: AxiosResponse<ApiResponse<number>> = yield call(sendAxiosPostJson<number, number>, "notification/markAsSeen", action.payload);
         if(res && res.data.success){
             yield put(markAsSeenNotificationSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -46,15 +46,15 @@ export function* markAsSeenNotification(action) {
 }
 
 
-export function* onGetUnseenNotifications() {
-    yield takeLatest(getUnseenNotificationsStart, getUnseenNotifications);
+export function* onGetUnseenNotifications(): SagaIterator {
+    yield takeLatest(getUnseenNotificationsStart.type, getUnseenNotifications);
 }
 
-export function* onMarkAsSeenNotification() {
-    yield takeLatest(markAsSeenNotificationStart, markAsSeenNotification);
+export function* onMarkAsSeenNotification(): SagaIterator {
+    yield takeLatest(markAsSeenNotificationStart.type, markAsSeenNotification);
 }
 
-export function* notificationSaga() {
+export function* notificationSaga(): SagaIterator {
     yield all([
         call(onGetUnseenNotifications),
         call(onMarkAsSeenNotification),

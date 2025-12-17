@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Notification, NotificationError, NotificationState } from "./notification.types";
 
-const initialState = {
+const initialState: NotificationState = {
     notifications: [],
     loading: false,
     error: null,
@@ -13,37 +14,37 @@ export const notificationSlice = createSlice({
         receiveNotificationStart: (state) => {
             state.loading = true;
         },
-        receiveNotificationSuccess: (state, action) => {
+        receiveNotificationSuccess: (state, action: PayloadAction<Notification>) => {
             state.notifications = [...state.notifications, action.payload];
             state.loading = false;
         },
-        receiveNotificationFailure: (state, action) => {
+        receiveNotificationFailure: (state, action: PayloadAction<NotificationError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         getUnseenNotificationsStart: (state) => {
             state.loading = true;
         },
-        getUnseenNotificationsSuccess: (state, action) => {
+        getUnseenNotificationsSuccess: (state, action: PayloadAction<Notification[]>) => {
             state.notifications = action.payload;
             state.loading = false;
         },
-        getUnseenNotificationsFailure: (state, action) => {
+        getUnseenNotificationsFailure: (state, action: PayloadAction<NotificationError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         markAsSeenNotificationStart: (state) => {
             state.loading = true;
         },
-        markAsSeenNotificationSuccess: (state, action) => {
+        markAsSeenNotificationSuccess: (state, action: PayloadAction<number>) => {
             state.notifications = state.notifications.filter((notification) => notification.id != action.payload);
             state.loading = false;
         },
-        markAsSeenNotificationFailure: (state, action) => {
+        markAsSeenNotificationFailure: (state, action: PayloadAction<NotificationError>) => {
             state.error = action.payload;
             state.loading = false;
         },
-        removeNotification: (state, action) => {
+        removeNotification: (state, action: PayloadAction<number>) => {
             state.notifications = state.notifications.filter((notification) => notification.id != action.payload);
         },
 
