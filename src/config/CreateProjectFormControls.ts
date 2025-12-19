@@ -1,6 +1,9 @@
+import { FormControl } from "@/types/formConfig/formControl";
+import { CreateProjectFormState } from "@/types/formConfig/project/createProjectFormState";
+
 export const projectCategories = ["BACKEND", "FRONTEND", "GAMEDEV", "MOBILE", "AI", "DEVOPS"];
 
-export const createProjectFormControls = [
+export const createProjectFormControls: FormControl<CreateProjectFormState>[] = [
     {
         name : "title",
         label : "Title",
@@ -26,9 +29,8 @@ export const createProjectFormControls = [
         type : "text",
         componentType : "input",
         onKeyDown : (e, formInput, setFormInput) => {
-            if (e.key === "Enter" && e.target.value.trim() !== "") {
-                setFormInput({...formInput, tags : [...formInput.tags, e.target.value.trim()], tagInput : ""});
-                console.log(formInput);
+            if (e.key === "Enter" && e.currentTarget.value.trim() !== "") {
+                setFormInput({...formInput, tags : [...formInput.tags, e.currentTarget.value.trim()], tagInput : ""});
             }
             
         }
