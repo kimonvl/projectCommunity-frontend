@@ -1,6 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { WebsocketState } from "./websocket.types";
 
-const initialState = {
+const initialState: WebsocketState = {
     isConnected: false,
     subscribedTopics: {},
 };
@@ -9,27 +10,25 @@ export const websocketSlice = createSlice({
     name: 'websocket',
     initialState,
     reducers: {
-        connectWebsocketStart: (state) => {
+        connectWebsocketStart: () => {
         },
-        connectWebsocketSuccess: (state) => {
-            console.log("reducer running");
-            
+        connectWebsocketSuccess: (state) => {            
             state.isConnected = true;
         },
         connectWebsocketFailure: (state) => {
             state.isConnected = false;
             state.subscribedTopics = {};
         },
-        subscribeToTopicStart: (state) => { },
-        subscribeToTopicSuccess: (state, acction) => {
-            state.subscribedTopics[acction.payload] = true;
+        subscribeToTopicStart: () => { },
+        subscribeToTopicSuccess: (state, action: PayloadAction<string>) => {
+            state.subscribedTopics[action.payload] = true;
         },
-        subscribeToTopicFailure: (state) => { },
-        unSubscribeFromTopicStart: (state) => { },
+        subscribeToTopicFailure: () => { },
+        unSubscribeFromTopicStart: () => { },
         unSubscribeFromTopicSuccess: (state, action) => {
             delete state.subscribedTopics[action.payload];
         },
-        unSubscribeFromTopicFailure: (state) => { },
+        unSubscribeFromTopicFailure: () => { },
     }
 });
 
