@@ -3,17 +3,21 @@ import { acceptProjectInvitationFailure, acceptProjectInvitationStart, acceptPro
 import { toast } from "sonner";
 import { sendAxiosGet, sendAxiosPostJson } from "@/utils/axios.utils";
 import { removeNotification } from "../notification/notificationSlice";
+import { SagaIterator } from "redux-saga";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { AcceptProjectInvitationRequest, CreateProjectRequest, ProjectInvitationRequest } from "@/types/requests/project";
+import { Project } from "./project.types";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
 
-export function* creatProject(action) {
+export function* creatProject(action: PayloadAction<CreateProjectRequest>): SagaIterator {
     try {
-        const { title, description, category, tags, setOpen } = action.payload;
-        const res = yield call(sendAxiosPostJson, "project/create", { title, description, category, tags });
+        const res: AxiosResponse<ApiResponse<Project>> = yield call(sendAxiosPostJson<Project, CreateProjectRequest>, "project/create", action.payload);
         if (res && res.data.success) {
             yield put(createProjectSuccess(res.data.data));
             toast.success(res.data.message);
-            setOpen(false);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -24,14 +28,14 @@ export function* creatProject(action) {
     }
 }
 
-export function* getMyProjects(action) {
+export function* getMyProjects(): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, "project/myProjects");
+        const res: AxiosResponse<ApiResponse<Project[]>> = yield call(sendAxiosGet<Project[]>, "project/myProjects");
         if (res && res.data.success) {
             yield put(getMyProjectsSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -42,14 +46,14 @@ export function* getMyProjects(action) {
     }
 }
 
-export function* getSelectedProject(action) {
+export function* getSelectedProject(action: PayloadAction<number>): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, `project/selectedProject/${action.payload}`);
+        const res: AxiosResponse<ApiResponse<Project>> = yield call(sendAxiosGet<Project>, `project/selectedProject/${action.payload}`);
         if (res && res.data.success) {
             yield put(getSelectedProjectSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -60,16 +64,14 @@ export function* getSelectedProject(action) {
     }
 }
 
-export function* sendProjectInvitation(action) {
+export function* sendProjectInvitation(action: PayloadAction<ProjectInvitationRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, "project/sendProjectInvitation", action.payload);
-        console.log(res);
-        
+        const res: AxiosResponse<ApiResponse<void>> = yield call(sendAxiosPostJson<void, ProjectInvitationRequest>, "project/sendProjectInvitation", action.payload);        
         if(res && res.data.success){
             yield put(sendProjectInvitationSuccess());
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -80,15 +82,15 @@ export function* sendProjectInvitation(action) {
     }
 }
 
-export function* acceptProjectInvitation(action) {
+export function* acceptProjectInvitation(action: PayloadAction<AcceptProjectInvitationRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosPostJson, `project/acceptInvitation`, action.payload);
+        const res: AxiosResponse<ApiResponse<Project>> = yield call(sendAxiosPostJson<Project, AcceptProjectInvitationRequest>, `project/acceptInvitation`, action.payload);
         if (res && res.data.success) {
             yield put(acceptProjectInvitationSuccess(res.data.data));
             yield put(removeNotification(action.payload.notificationId));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -99,27 +101,27 @@ export function* acceptProjectInvitation(action) {
     }
 }
 
-export function* onCreateProject() {
-    yield takeLatest(createProjectStart, creatProject);
+export function* onCreateProject(): SagaIterator {
+    yield takeLatest(createProjectStart.type, creatProject);
 }
 
-export function* onGetMyProjects() {
-    yield takeLatest(getMyProjectsStart, getMyProjects);
+export function* onGetMyProjects(): SagaIterator {
+    yield takeLatest(getMyProjectsStart.type, getMyProjects);
 }
 
-export function* onGetSelectedProject() {
-    yield takeLatest(getSelectedProjectStart, getSelectedProject);
+export function* onGetSelectedProject(): SagaIterator {
+    yield takeLatest(getSelectedProjectStart.type, getSelectedProject);
 }
 
-export function* onSendProjectInvitation() {
-    yield takeLatest(sendProjectInvitationStart, sendProjectInvitation);
+export function* onSendProjectInvitation(): SagaIterator {
+    yield takeLatest(sendProjectInvitationStart.type, sendProjectInvitation);
 }
 
-export function* onAcceptProjectInvitation() {
-    yield takeLatest(acceptProjectInvitationStart, acceptProjectInvitation);
+export function* onAcceptProjectInvitation(): SagaIterator {
+    yield takeLatest(acceptProjectInvitationStart.type, acceptProjectInvitation);
 }
 
-export function* projectSaga() {
+export function* projectSaga(): SagaIterator {
     yield all([
         call(onCreateProject),
         call(onGetMyProjects),

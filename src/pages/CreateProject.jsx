@@ -2,12 +2,14 @@ import CommonForm from '@/components/common-form/CommonForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { createProjectFormControls } from '@/config/CreateProjectFormControls'
+import { selectCreateProjectLoading } from '@/store/project/project.selector'
 import { createProjectStart } from '@/store/project/projectSlice'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
 const CreateProject = ({ open, setOpen }) => {
     const dispatch = useDispatch();
+    const createProjectLoading = useSelector(selectCreateProjectLoading);
     const [cpFormInput, setCpFormInput] = useState({
         title: "",
         description: "",
@@ -16,13 +18,28 @@ const CreateProject = ({ open, setOpen }) => {
         tags: [],
     });
 
+    useEffect(() => {
+        if (!createProjectLoading && open) {
+            setOpen(false);
+            setCpFormInput({
+                title: "",
+                description: "",
+                category: "",
+                tagInput: "",
+                tags: [],
+            });
+            console.log("createProjectLoading useEffect");
+            
+        }
+
+    }, [createProjectLoading])
+
     const handleSubmit = () => {
         dispatch(createProjectStart({
-            title : cpFormInput.title, 
-            description : cpFormInput.description, 
-            category : cpFormInput.category, 
-            tags : cpFormInput.tags, 
-            setOpen
+            title: cpFormInput.title,
+            description: cpFormInput.description,
+            category: cpFormInput.category,
+            tags: cpFormInput.tags,
         }));
     }
 

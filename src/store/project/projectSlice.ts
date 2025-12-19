@@ -1,9 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit"
-import { authSlice } from "../auth/authSlice";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit"
+import { Project, ProjectError, ProjectState } from "./project.types";
 
-const initialState = {
+const initialState: ProjectState = {
     myProjects: [],
     selectedProject: null,
+    createProjectLoading: false,
     loading: false,
     error: null,
 };
@@ -14,34 +15,37 @@ export const projectSlice = createSlice({
     reducers: {
         createProjectStart: (state) => {
             state.loading = true;
+            state.createProjectLoading = true;
         },
-        createProjectSuccess: (state, action) => {
+        createProjectSuccess: (state, action: PayloadAction<Project>) => {
             state.myProjects = [...state.myProjects, action.payload];
             state.loading = false;
+            state.createProjectLoading = false;
         },
-        createProjectFailure: (state, action) => {
+        createProjectFailure: (state, action: PayloadAction<ProjectError>) => {
             state.error = action.payload;
             state.loading = false;
+            state.createProjectLoading = false;
         },
         getMyProjectsStart: (state) => {
             state.loading = true;
         },
-        getMyProjectsSuccess: (state, action) => {
+        getMyProjectsSuccess: (state, action: PayloadAction<Project[]>) => {
             state.myProjects = action.payload;
             state.loading = false;
         },
-        getMyProjectsFailure: (state, action) => {
+        getMyProjectsFailure: (state, action: PayloadAction<ProjectError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         getSelectedProjectStart: (state) => {
             state.loading = true;
         },
-        getSelectedProjectSuccess: (state, action) => {
+        getSelectedProjectSuccess: (state, action: PayloadAction<Project>) => {
             state.selectedProject = action.payload;
             state.loading = false;
         },
-        getSelectedProjectFailure: (state, action) => {
+        getSelectedProjectFailure: (state, action: PayloadAction<ProjectError>) => {
             state.error = action.payload;
             state.selectedProject = null;
             state.loading = false;
@@ -52,18 +56,18 @@ export const projectSlice = createSlice({
         sendProjectInvitationSuccess: (state) => {
             state.loading = false;
         },
-        sendProjectInvitationFailure: (state, action) => {
+        sendProjectInvitationFailure: (state, action: PayloadAction<ProjectError>) => {
             state.error = action.payload;
             state.loading = false;
         },
         acceptProjectInvitationStart: (state) => {
             state.loading = true;
         },
-        acceptProjectInvitationSuccess: (state, action) => {
+        acceptProjectInvitationSuccess: (state, action: PayloadAction<Project>) => {
             state.myProjects = [...state.myProjects, action.payload];
             state.loading = false;
         },
-        acceptProjectInvitationFailure: (state, action) => {
+        acceptProjectInvitationFailure: (state, action: PayloadAction<ProjectError>) => {
             state.error = action.payload;
             state.loading = false;
         },
