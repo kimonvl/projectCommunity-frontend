@@ -16,6 +16,7 @@ import { receiveMessage } from "../chat/chatSlice";
 import { selectSelectedProject } from "../project/project.selector";
 import { getNewCreatedIssueStart } from "../issue/issueSlice";
 import { Middleware } from "@reduxjs/toolkit";
+import { Notification } from "../notification/notification.types";
 
 let client: Client | null = null;
 let isConnecting = false;
@@ -55,13 +56,13 @@ const websocketMiddleware: Middleware =
 
           // notifications
           client!.subscribe("/user/queue/notifications", (msg) => {
-            const notification = JSON.parse(msg.body);
+            const notification: Notification = JSON.parse(msg.body);
             store.dispatch(receiveNotificationSuccess(notification));
 
-            if (notification.type == "ISSUE_CREATED") {
+            if (notification.type == "ISSUE_CREATED" && notification.metadata && "issueId" in notification.metadata) {
               const selectedProjectId = selectSelectedProject(store.getState())?.id;
-              if (notification.metadata.projectId == selectedProjectId)
-                store.dispatch(getNewCreatedIssueStart(notification.metadata.issueId));
+              if (notification.metadata?.projectId == selectedProjectId)
+                store.dispatch(getNewCreatedIssueStart(notification.metadata?.issueId));
             }
           });
 

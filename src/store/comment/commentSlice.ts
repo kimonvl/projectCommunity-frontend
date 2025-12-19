@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Comment, CommentError, CommentState } from "./comment.types";
+import { CreateCommentRequest } from "@/types/requests/comment";
 
 const initialState: CommentState = {
     selectedIssueComments: [],
@@ -11,7 +12,7 @@ export const commentSlice = createSlice({
     name: 'comment',
     initialState,
     reducers: {
-        getIssueCommentsStart: (state) => {
+        getIssueCommentsStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         getIssueCommentsSuccess: (state, action: PayloadAction<Comment[]>) => {
@@ -22,7 +23,7 @@ export const commentSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        createCommentStart: (state) => {
+        createCommentStart: (state, _action: PayloadAction<CreateCommentRequest>) => {
             state.loading = true;
         },
         createCommentSuccess: (state, action: PayloadAction<Comment>) => {

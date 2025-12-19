@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectSearchUsers, selectUserLoading } from "@/store/user/user.selector";
 import { clearSearchUsers, getSearchUsersStart } from "@/store/user/userSlice";
 import { Loader2 } from "lucide-react";
@@ -16,9 +16,9 @@ function debounce(fn, delay) {
 }
 
 export default function ProjectInvite({ projectId, open, setOpen, onInvite }) {
-  const dispatch = useDispatch();
-  const searchUsers = useSelector(selectSearchUsers);
-  const loading = useSelector(selectUserLoading);
+  const dispatch = useAppDispatch();
+  const searchUsers = useAppSelector(selectSearchUsers);
+  const loading = useAppSelector(selectUserLoading);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [selected, setSelected] = useState([]);

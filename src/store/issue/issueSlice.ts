@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Issue, IssueError, IssueState } from "./issue.types";
+import { AssignUserToIssueRequest, ChangeIssueStatusRequest, CreateIssueRequest, DeleteIssuePayload } from "@/types/requests/issue";
 
 const initialState: IssueState = {
     selectedProjectIssues: [],
@@ -12,7 +13,7 @@ export const issueSlice = createSlice({
     name: 'issue',
     initialState,
     reducers: {
-        createIssueStart: (state) => {
+        createIssueStart: (state, _action: PayloadAction<CreateIssueRequest>) => {
             state.loading = true;
         },
         createIssueSuccess: (state, action: PayloadAction<Issue>) => {
@@ -23,7 +24,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        getProjectIssuesStart: (state) => {
+        getProjectIssuesStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         getProjectIssuesSuccess: (state, action: PayloadAction<Issue[]>) => {
@@ -34,7 +35,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        assignUserToIssueStart: (state) => {
+        assignUserToIssueStart: (state, _action: PayloadAction<AssignUserToIssueRequest>) => {
             state.loading = true;
         },
         assignUserToIssueSuccess: (state, action: PayloadAction<Issue>) => {
@@ -50,7 +51,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        changeIssueStatusStart: (state) => {
+        changeIssueStatusStart: (state, _action: PayloadAction<ChangeIssueStatusRequest>) => {
             state.loading = true;
         },
         changeIssueStatusSuccess: (state, action: PayloadAction<Issue>) => {
@@ -73,7 +74,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        getSelectedIssueStart: (state) => {
+        getSelectedIssueStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         getSelectedIssueSuccess: (state, action: PayloadAction<Issue>) => {
@@ -84,7 +85,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        getNewCreatedIssueStart: (state) => {
+        getNewCreatedIssueStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         getNewCreatedIssueSuccess: (state, action: PayloadAction<Issue>) => {
@@ -95,7 +96,7 @@ export const issueSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        deleteIssueStart: (state) => {
+        deleteIssueStart: (state, _action: PayloadAction<DeleteIssuePayload>) => {
             state.loading = true;
         },
         deleteIssueSuccess: (state, action: PayloadAction<number>) => {

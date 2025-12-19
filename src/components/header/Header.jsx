@@ -10,9 +10,8 @@ import {
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { logoutStart } from "@/store/auth/authSlice";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { useState } from "react";
 import CreateProject from "@/pages/CreateProject";
 import { Bell } from "lucide-react";
@@ -21,9 +20,9 @@ import { selectNotifications } from "@/store/notification/notification.selector"
 import Notification from "../notifications/Notification";
 
 export default function Header() {
-    const dispatch = useDispatch();
-    const notifications = useSelector(selectNotifications);
-    const user = useSelector(selectCurrentUser);
+    const dispatch = useAppDispatch();
+    const notifications = useAppSelector(selectNotifications);
+    const user = useAppSelector(selectCurrentUser);
     const avatarLetter = user?.email?.charAt(0).toUpperCase() || "?";
     const [open, setOpen] = useState(false);
 

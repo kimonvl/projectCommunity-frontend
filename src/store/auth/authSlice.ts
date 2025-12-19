@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AuthError, AuthState, User } from "./auth.types";
+import { AuthError, AuthState, LoginPayload, SignUpPayload, User } from "./auth.types";
 
 const initialState: AuthState = {
     user: null,
@@ -12,7 +12,7 @@ export const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers: {
-        signUpStart: (state) => {
+        signUpStart: (state, _action: PayloadAction<SignUpPayload>) => {
             state.loading = true;
         },
         signUpSuccess: (state) => {
@@ -22,7 +22,7 @@ export const authSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        loginStart: (state) => {
+        loginStart: (state, _action: PayloadAction<LoginPayload>) => {
             state.loading = true;
         },
         loginSuccess: (state, action: PayloadAction<User>) => {

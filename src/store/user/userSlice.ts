@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UserError, UserState } from "./user.types";
 import { User } from "../auth/auth.types";
+import { SearchUsersRequest } from "@/types/requests/user";
 
 const initialState: UserState = {
     searchUsers: [],
@@ -12,7 +13,7 @@ export const userSlice = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        getSearchUsersStart: (state) => {
+        getSearchUsersStart: (state, _action: PayloadAction<SearchUsersRequest>) => {
             state.loading = true;
         },
         getSearchUsersSuccess: (state, action: PayloadAction<User[]>) => {

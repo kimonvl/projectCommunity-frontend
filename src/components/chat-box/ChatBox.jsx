@@ -1,15 +1,15 @@
 import React, { useMemo, useState, useRef, useEffect } from "react";
 import { Button } from "../ui/button";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectActiveChat } from "@/store/chat/chat.selector";
 import MessageBubble from "./MessageBuble";
 import { selectCurrentUserId } from "@/store/auth/auth.selector";
 import { sendMessageStart } from "@/store/chat/chatSlice";
 
 const ChatBox = () => {
-    const dispatch = useDispatch();
-    const activeChat = useSelector(selectActiveChat);
-    const currentUserId = useSelector(selectCurrentUserId);
+    const dispatch = useAppDispatch();
+    const activeChat = useAppSelector(selectActiveChat);
+    const currentUserId = useAppSelector(selectCurrentUserId);
 
     const [content, setContent] = useState("");
 

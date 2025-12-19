@@ -1,34 +1,17 @@
 import { useEffect, useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { MoreVertical, Filter } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-} from "@/components/ui/dropdown-menu";
 import FilterBar from "@/components/filter-bar/FilterBar";
 import SearchBar from "@/components/search-bar/SearchBar";
 import ProjectCard from "@/components/project-card/ProjectCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { getMyProjectsStart } from "@/store/project/projectSlice";
 import { selectMyProjects } from "@/store/project/project.selector";
-import { fetchActiveChatStart, sendMessageStart } from "@/store/chat/chatSlice";
 import { projectCategories } from "@/config/CreateProjectFormControls";
-import { subscribeToTopicStart } from "@/store/websocket/websocketSlice";
-import { selectWebsocketIsConnected } from "@/store/websocket/websocket.selector";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
-  const myProjects = useSelector(selectMyProjects);
+  const myProjects = useAppSelector(selectMyProjects);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedTag, setSelectedTag] = useState("all");
   const [search, setSearch] = useState("");

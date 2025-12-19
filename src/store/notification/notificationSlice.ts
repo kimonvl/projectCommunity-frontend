@@ -33,7 +33,7 @@ export const notificationSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        markAsSeenNotificationStart: (state) => {
+        markAsSeenNotificationStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         markAsSeenNotificationSuccess: (state, action: PayloadAction<number>) => {

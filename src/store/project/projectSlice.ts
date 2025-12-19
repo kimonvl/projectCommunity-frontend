@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { Project, ProjectError, ProjectState } from "./project.types";
+import { AcceptProjectInvitationRequest, CreateProjectRequest, ProjectInvitationRequest } from "@/types/requests/project";
 
 const initialState: ProjectState = {
     myProjects: [],
@@ -13,7 +14,7 @@ export const projectSlice = createSlice({
     name: 'project',
     initialState,
     reducers: {
-        createProjectStart: (state) => {
+        createProjectStart: (state, _action: PayloadAction<CreateProjectRequest>) => {
             state.loading = true;
             state.createProjectLoading = true;
         },
@@ -38,7 +39,7 @@ export const projectSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        getSelectedProjectStart: (state) => {
+        getSelectedProjectStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         getSelectedProjectSuccess: (state, action: PayloadAction<Project>) => {
@@ -50,7 +51,7 @@ export const projectSlice = createSlice({
             state.selectedProject = null;
             state.loading = false;
         },
-        sendProjectInvitationStart: (state) => {
+        sendProjectInvitationStart: (state, _action: PayloadAction<ProjectInvitationRequest>) => {
             state.loading = true;
         },
         sendProjectInvitationSuccess: (state) => {
@@ -60,7 +61,7 @@ export const projectSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        acceptProjectInvitationStart: (state) => {
+        acceptProjectInvitationStart: (state, _action: PayloadAction<AcceptProjectInvitationRequest>) => {
             state.loading = true;
         },
         acceptProjectInvitationSuccess: (state, action: PayloadAction<Project>) => {

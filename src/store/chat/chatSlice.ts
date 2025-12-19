@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { Chat, ChatError, ChatState, Message } from "./chat.types";
+import { SendMessageRequest } from "@/types/requests/chat";
 
 const initialState: ChatState = {
     activeChat: null,
@@ -11,7 +12,7 @@ export const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
-        fetchActiveChatStart: (state) => {
+        fetchActiveChatStart: (state, _action: PayloadAction<number>) => {
             state.loading = true;
         },
         fetchActiveChatSuccess: (state, action: PayloadAction<Chat>) => {
@@ -22,7 +23,7 @@ export const chatSlice = createSlice({
             state.error = action.payload;
             state.loading = false;
         },
-        sendMessageStart: () => {
+        sendMessageStart: (_state, _action: PayloadAction<SendMessageRequest>) => {
         },
         sendMessageSuccess: () => {
         },

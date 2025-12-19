@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearSelectedProject, getSelectedProjectStart } from "@/store/project/projectSlice";
 import { selectSelectedProject } from "@/store/project/project.selector";
 import { Loader2 } from "lucide-react";
@@ -12,20 +12,19 @@ import ProjectInvite from "./ProjectInvite";
 import ChatBox from "@/components/chat-box/ChatBox";
 import { fetchActiveChatStart } from "@/store/chat/chatSlice";
 import IssueColumn from "@/components/issues/IssueColumn";
-import CreateIssue from "./CreateIssue";
 import { assignUserToIssueStart, getProjectIssuesStart } from "@/store/issue/issueSlice";
 import { selectSelectedProjectIssues } from "@/store/issue/issue.selector";
 import { selectActiveChatId } from "@/store/chat/chat.selector";
 import { subscribeToTopicStart, unSubscribeFromTopicStart } from "@/store/websocket/websocketSlice";
 
 export default function ProjectDetails() {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { projectId } = useParams();
-    const selectedProject = useSelector(selectSelectedProject);
-    const selectedProjectIssues = useSelector(selectSelectedProjectIssues);
-    const activeChatId = useSelector(selectActiveChatId);
+    const selectedProject = useAppSelector(selectSelectedProject);
+    const selectedProjectIssues = useAppSelector(selectSelectedProjectIssues);
+    const activeChatId = useAppSelector(selectActiveChatId);
     const [projectInveteIsOpen, setProjectInviteIsOpen] = useState(false);
-    const wsConnected = useSelector(selectWebsocketIsConnected);
+    const wsConnected = useAppSelector(selectWebsocketIsConnected);
     useEffect(() => {
         dispatch(getSelectedProjectStart(projectId));
         dispatch(getProjectIssuesStart(projectId));
