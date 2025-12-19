@@ -6,8 +6,9 @@ import { notificationSaga } from "./notification/notification.saga";
 import { userSaga } from "./user/user.saga";
 import { issueSaga } from "./issue/issue.saga";
 import { commentSaga } from "./comment/comment.saga";
+import { SagaIterator } from "redux-saga";
 
-export function* rootSaga(): Generator {
+export function* rootSaga(): SagaIterator {
     yield all([
         fork(authSaga),
         fork(projectSaga),

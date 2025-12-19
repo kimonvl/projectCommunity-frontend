@@ -2,15 +2,21 @@ import { all, call, put, takeLatest } from "redux-saga/effects";
 import { getSearchUsersFailure, getSearchUsersStart, getSearchUsersSuccess } from "./userSlice";
 import { toast } from "sonner";
 import { sendAxiosGet } from "@/utils/axios.utils";
+import { PayloadAction } from "@reduxjs/toolkit";
+import { SearchUsersRequest } from "@/types/requests/user";
+import { User } from "../auth/auth.types";
+import { SagaIterator } from "redux-saga";
+import { AxiosResponse } from "axios";
+import { ApiResponse } from "@/types/api";
 
-export function* getSearchUsers(action) {
+export function* getSearchUsers(action: PayloadAction<SearchUsersRequest>): SagaIterator {
     try {
-        const res = yield call(sendAxiosGet, `user/search?emailQuery=${action.payload.emailQuery}&projectId=${action.payload.projectId}`);
+        const res: AxiosResponse<ApiResponse<User[]>> = yield call(sendAxiosGet<User[]>, `user/search?emailQuery=${action.payload.emailQuery}&projectId=${action.payload.projectId}`);
         if(res && res.data.success){
             yield put(getSearchUsersSuccess(res.data.data));
             toast.success(res.data.message);
         }
-    } catch (error) {
+    } catch (error: any) {
         console.error("Signup Error:", error); // Debugging log
 
         const errorMessage = error.response?.data?.message || "An error occurred";
@@ -21,11 +27,11 @@ export function* getSearchUsers(action) {
     }
 }
 
-export function* OnGetSearchUsers() {
-    yield takeLatest(getSearchUsersStart, getSearchUsers);
+export function* OnGetSearchUsers(): SagaIterator {
+    yield takeLatest(getSearchUsersStart.type, getSearchUsers);
 }
 
-export function* userSaga() {
+export function* userSaga(): SagaIterator {
     yield all([
         call(OnGetSearchUsers),
     ]);
