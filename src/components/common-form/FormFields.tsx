@@ -1,29 +1,34 @@
 import { Label } from '@radix-ui/react-label'
 import { Input } from '../ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
+import { FormControl } from '@/types/formConfig/formControl'
+import { ChangeEvent, KeyboardEvent } from 'react';
 
-const FormFields = ({ formControls, formInput, setFormInput }) => {
+interface FormFieldsProps<TFormState> {
+    formControls: FormControl<TFormState>[];
+    formInput: TFormState;
+    setFormInput: React.Dispatch<React.SetStateAction<TFormState>>;
+}
+
+function FormFields<TFormState>({ formControls, formInput, setFormInput }: FormFieldsProps<TFormState>) {
     
-    const renderComponentByType = (controlItem) => {
-        const itemValue = formInput[controlItem.name];
+    const renderComponentByType = (controlItem: FormControl<TFormState>) => {
+        const itemValue = formInput[controlItem.name] as string;
 
-        const defaultOnchange = (e, controlItem) => setFormInput({ ...formInput, [controlItem.name]: e.target.value })
+        const defaultOnchange = (e: ChangeEvent<HTMLInputElement>, controlItem: FormControl<TFormState>) => setFormInput({ ...formInput, [controlItem.name]: e.target.value })
 
         switch (controlItem.componentType) {
             case "input":
                 return (
                     <Input
                         className="w-full"
-                        id={controlItem.name}
+                        id={controlItem.name as string}
                         type={controlItem.type}
                         placeholder={controlItem.placeholder}
                         value={itemValue}
-                        onChange={(e) => controlItem.onChange ?
-                            controlItem.onChange(e, formInput, setFormInput) :
-                            defaultOnchange(e, controlItem)
-                        }
+                        onChange={(e: ChangeEvent<HTMLInputElement>) => defaultOnchange(e, controlItem)}
                         {...(controlItem.onKeyDown && {
-                            onKeyDown: (e) => controlItem.onKeyDown(e, formInput, setFormInput)
+                            onKeyDown: (e: KeyboardEvent<HTMLInputElement>) => controlItem.onKeyDown!(e, formInput, setFormInput)
                         })}
                     />
                 );
@@ -52,8 +57,8 @@ const FormFields = ({ formControls, formInput, setFormInput }) => {
             default:
                 return (
                     <Input
-                        id={controlItem.name}
-                        type={controlItem.name}
+                        id={controlItem.name as string}
+                        type={controlItem.name as string}
                         placeholder={controlItem.placeholder}
                         value={itemValue}
                         onChange={(e) => setFormInput({ ...formInput, [controlItem.name]: e.target.value })}
@@ -61,8 +66,6 @@ const FormFields = ({ formControls, formInput, setFormInput }) => {
                 )
                 break;
         }
-
-
     }
 
     return (
@@ -70,8 +73,8 @@ const FormFields = ({ formControls, formInput, setFormInput }) => {
             {
                 formControls.map((controlItem) => {
                     return (
-                        <div className="grid gap-2" key={controlItem.name}>
-                            <Label className='float-start mt-1' htmlFor={controlItem.name}>{controlItem.label}</Label>
+                        <div className="grid gap-2" key={controlItem.name as string}>
+                            <Label className='float-start mt-1' htmlFor={controlItem.name as string}>{controlItem.label}</Label>
                             {renderComponentByType(controlItem)}
                         </div>
                     )
