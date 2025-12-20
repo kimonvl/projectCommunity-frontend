@@ -1,8 +1,16 @@
-import React, { Fragment } from "react";
+import React, { Fragment, JSX } from "react";
 import { Navigate, useLocation } from "react-router-dom";
 import { Skeleton } from "../ui/skeleton";
+import { User } from "@/store/auth/auth.types";
 
-const ProtectedRoute = ({ element, user, isAuthenticated, loading }) => {
+interface ProtectedRouteProps {
+  element: JSX.Element;
+  user: User | null;
+  isAuthenticated: boolean;
+  loading: boolean;
+}
+
+const ProtectedRoute = ({ element, user, isAuthenticated, loading }: ProtectedRouteProps) => {
   const location = useLocation();
 
   // 1️⃣ Handle loading first - prevents redirect loop
