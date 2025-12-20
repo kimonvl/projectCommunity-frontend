@@ -1,10 +1,15 @@
-import React from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu'
 import { Badge } from '../ui/badge'
 import { MoreVertical, Users } from 'lucide-react'
+import { Project } from '@/store/project/project.types'
 
-const ProjectCard = ({ project, onClick }) => {
+interface ProjectCardProps {
+    project: Project;
+    onClick: () => void
+}
+
+const ProjectCard = ({ project, onClick }: ProjectCardProps) => {
     return (
         <Card key={project.id} onClick={onClick} className="bg-neutral-900 border-neutral-800 hover:border-neutral-600 transition-colors">
             <CardHeader className="flex flex-row justify-between items-start pb-2">
