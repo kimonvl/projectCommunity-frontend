@@ -1,10 +1,8 @@
 import CommonForm from '@/components/common-form/CommonForm'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { loginFormControls, signUpFormControls } from '@/config/AuthFormControlls'
+import { loginFormControls } from '@/config/AuthFormControlls'
 import { loginStart } from '@/store/auth/authSlice'
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 const Login = () => {
@@ -14,7 +12,7 @@ const Login = () => {
         password : "",
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         dispatch(loginStart(loginInput));
     }
