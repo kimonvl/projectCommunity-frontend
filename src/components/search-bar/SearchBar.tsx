@@ -1,9 +1,14 @@
-import React from 'react'
+import React, { Dispatch, SetStateAction } from 'react'
 import { Input } from '../ui/input'
 import { Button } from '../ui/button'
 import { Filter } from 'lucide-react'
 
-const SearchBar = ({search, setSearch}) => {
+interface SearchBarProps {
+    search: string;
+    setSearch: Dispatch<SetStateAction<string>>
+}
+
+const SearchBar = ({search, setSearch}: SearchBarProps) => {
     return (
         <div className="flex justify-between items-center mb-3">
             <Input
