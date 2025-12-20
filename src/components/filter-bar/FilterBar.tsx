@@ -1,10 +1,17 @@
 import { Filter } from 'lucide-react'
-import React from 'react'
 import { Separator } from '../ui/separator'
 import { RadioGroup, RadioGroupItem } from '../ui/radio-group'
 import { Label } from '../ui/label'
+import { Dispatch, SetStateAction } from 'react';
 
-const FilterBar = ({selectedCategory, setSelectedCategory, categories, tags}) => {
+interface FilterBarProps {
+  selectedCategory: string;
+  setSelectedCategory: Dispatch<SetStateAction<string>>;
+  categories: string[];
+  tags: string[];
+}
+
+const FilterBar = ({selectedCategory, setSelectedCategory, categories, tags}: FilterBarProps) => {
   return (
     <aside className="w-full h-full bg-neutral-900 border border-neutral-800 rounded-lg p-4 overflow-y-auto max-h-[calc(100vh-100px)]">
           <div className="flex justify-between items-center">
