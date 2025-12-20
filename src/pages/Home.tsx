@@ -27,7 +27,7 @@ const Home = () => {
     return matchCategory && matchTag && matchSearch;
   });
 
-  const onProjectSelect = (projectId) => {
+  const onProjectSelect = (projectId: number) => {
     navigate(`/projectDetails/${projectId}`);
   } 
 

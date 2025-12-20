@@ -8,7 +8,7 @@ interface FilterBarProps {
   selectedCategory: string;
   setSelectedCategory: Dispatch<SetStateAction<string>>;
   categories: string[];
-  tags: string[];
+  tags?: string[];
 }
 
 const FilterBar = ({selectedCategory, setSelectedCategory, categories, tags}: FilterBarProps) => {
