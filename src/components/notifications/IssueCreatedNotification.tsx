@@ -1,16 +1,22 @@
+import { Notification } from '@/store/notification/notification.types';
 import { markAsSeenNotificationStart } from '@/store/notification/notificationSlice';
-import React from 'react'
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 
-const IssueCreatedNotification = ({notification}) => {
+interface IssueCreatedNotificationProps {
+    notification: Notification;
+}
+
+const IssueCreatedNotification = ({notification}: IssueCreatedNotificationProps) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const handleNotificationClick = () => {
-        dispatch(markAsSeenNotificationStart(notification.id));
-        window.history.pushState({}, "", `/projectDetails/${notification.metadata.projectId}`);
-        navigate(`/issueDetails/${notification.metadata.issueId}`);
+        if (notification.metadata?.type === "ISSUE_CREATED") {
+            dispatch(markAsSeenNotificationStart(notification.id));
+            window.history.pushState({}, "", `/projectDetails/${notification.metadata?.projectId}`);
+            navigate(`/issueDetails/${notification.metadata?.issueId}`);
+        }
     }
 
     return (

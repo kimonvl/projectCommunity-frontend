@@ -1,6 +1,7 @@
 import { User } from "../auth/auth.types";
 
 export interface IssueCreatedMetadata {
+    type: "ISSUE_CREATED";
 
     /** Email of the creator of the issue */
     creatorEmail: string;
@@ -13,6 +14,7 @@ export interface IssueCreatedMetadata {
 }
 
 export interface ProjectInviteMetadata {
+    type: "PROJECT_INVITE";
 
     /** Identifier of the target project */
     projectId: number;

@@ -1,18 +1,26 @@
 import { Button } from "@/components/ui/button";
+import { Notification } from "@/store/notification/notification.types";
 import { acceptProjectInvitationStart } from "@/store/project/projectSlice";
 import { useDispatch } from "react-redux";
 
-export default function ProjectInviteNotification({ notification }) {
-    const dispatch = useDispatch();
-    const metadata = notification.metadata
-        ? notification.metadata
-        : {};
+interface ProjectInviteNotificationProps {
+    notification: Notification;
+}
 
+export default function ProjectInviteNotification({ notification }: ProjectInviteNotificationProps) {
+    const dispatch = useDispatch();
+
+    if (notification.metadata?.type !== "PROJECT_INVITE") {
+        return;
+    }
+    
     const acceptProjectInvitation = () => {
-        dispatch(acceptProjectInvitationStart({
-            projectId: metadata?.projectId, 
-            notificationId: notification.id
-        }))
+        if (notification.metadata?.type === "PROJECT_INVITE"){
+            dispatch(acceptProjectInvitationStart({
+                projectId: notification.metadata?.projectId, 
+                notificationId: notification.id
+            }));
+        }
     };
 
     return (
@@ -24,13 +32,13 @@ export default function ProjectInviteNotification({ notification }) {
 
             {/* Project title */}
             <p className="text-xs text-neutral-400">
-                Project: <span className="font-semibold">{metadata.projectTitle}</span>
+                Project: <span className="font-semibold">{notification.metadata?.projectTitle}</span>
             </p>
 
             {/* Accept / decline buttons */}
             <div className="flex justify-end gap-2 pt-2">
                 <Button
-                    size="xs"
+                    size="sm"
                     variant="outline"
                     className="text-white border-neutral-600"
                     onClick={() => acceptProjectInvitation()}
@@ -38,7 +46,7 @@ export default function ProjectInviteNotification({ notification }) {
                     Accept
                 </Button>
                 <Button
-                    size="xs"
+                    size="sm"
                     variant="outline"
                     className="text-white border-neutral-600"
                     onClick={() => console.log("DECLINE INVITE")}
