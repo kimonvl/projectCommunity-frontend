@@ -1,7 +1,13 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { Message } from "@/store/chat/chat.types";
 
-function MessageBubble({ message, isOwn }) {
+interface MessageBubbleProps {
+    message: Message;
+    isOwn: boolean;
+}
+
+function MessageBubble({ message, isOwn }: MessageBubbleProps) {
     const firstLetter = message.sender?.email?.charAt(0)?.toUpperCase();    
 
     return (

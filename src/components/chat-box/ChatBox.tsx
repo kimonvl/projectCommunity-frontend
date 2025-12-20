@@ -13,7 +13,7 @@ const ChatBox = () => {
 
     const [content, setContent] = useState("");
 
-    const scrollRef = useRef(null);
+    const scrollRef = useRef<HTMLDivElement | null>(null);
 
     const safeMessages = activeChat?.messages || [];
 
