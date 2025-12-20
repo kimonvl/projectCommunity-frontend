@@ -1,6 +1,16 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { User } from "@/store/auth/auth.types";
+import { Dispatch, SetStateAction } from "react";
 
-export default function AssignUserDialog({ open, setOpen, assignedUsers = [], participants = [], onAssign }) {
+interface AssignUserDialogProps {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    assignedUsers: User[];
+    participants: User[];
+    onAssign: (user: User) => void
+}
+
+export default function AssignUserDialog({ open, setOpen, assignedUsers = [], participants = [], onAssign }: AssignUserDialogProps) {
     // Users currently assigned to the issue
     const assigned = assignedUsers;
 

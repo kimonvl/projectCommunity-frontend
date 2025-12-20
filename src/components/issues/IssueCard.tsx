@@ -2,8 +2,16 @@ import { MoreVertical } from "lucide-react";
 import AssignUserDialog from "./AssignUserDialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Issue } from "@/store/issue/issue.types";
+import { User } from "@/store/auth/auth.types";
 
-export default function IssueCard({ issue, participants, onAssign }) {
+interface IssueCardProps {
+    issue: Issue;
+    participants: User[];
+    onAssign: (issueId: number, user: User) => void;
+}
+
+export default function IssueCard({ issue, participants, onAssign }: IssueCardProps) {
     const navigate = useNavigate();
 
     const [dialogOpen, setDialogOpen] = useState(false);

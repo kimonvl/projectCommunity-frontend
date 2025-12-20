@@ -2,8 +2,19 @@ import CreateIssue from "@/pages/CreateIssue";
 import IssueCard from "./IssueCard";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import { Issue } from "@/store/issue/issue.types";
+import { User } from "@/store/auth/auth.types";
 
-export default function IssueColumn({ title, issues, participants, onAssign, projectId, createActive = false }) {
+interface IssueColumnProps {
+    title: string;
+    issues: Issue[];
+    participants: User[];
+    onAssign: (issueId: number, user: User) => void;
+    projectId: number;
+    createActive: boolean;
+}
+
+export default function IssueColumn({ title, issues, participants, onAssign, projectId, createActive = false }: IssueColumnProps) {
         const [createIssueIsOpen, setCreateIssueIsOpen] = useState(false);
 
     return (
