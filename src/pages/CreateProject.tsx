@@ -4,13 +4,19 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { createProjectFormControls } from '@/config/CreateProjectFormControls'
 import { selectCreateProjectLoading } from '@/store/project/project.selector'
 import { createProjectStart } from '@/store/project/projectSlice'
-import React, { useEffect, useState } from 'react'
+import { CreateProjectFormState } from '@/types/formConfig/project/createProjectFormState'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-const CreateProject = ({ open, setOpen }) => {
+interface CreateProjectProps {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+}
+
+const CreateProject = ({ open, setOpen }: CreateProjectProps) => {
     const dispatch = useDispatch();
     const createProjectLoading = useSelector(selectCreateProjectLoading);
-    const [cpFormInput, setCpFormInput] = useState({
+    const [cpFormInput, setCpFormInput] = useState<CreateProjectFormState>({
         title: "",
         description: "",
         category: "",
@@ -51,7 +57,7 @@ const CreateProject = ({ open, setOpen }) => {
                 </DialogHeader>
 
                 <div className="text-neutral-400 w-full">
-                    <CommonForm formControls={createProjectFormControls} formInput={cpFormInput} setFormInput={setCpFormInput} buttonName={"Create Project"} btnDisabled={true} />
+                    <CommonForm<CreateProjectFormState> formControls={createProjectFormControls} formInput={cpFormInput} setFormInput={setCpFormInput} buttonName={"Create Project"} btnDisabled={true} />
                     {cpFormInput.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mt-3">
                             {cpFormInput.tags.map((tag, index) => (
