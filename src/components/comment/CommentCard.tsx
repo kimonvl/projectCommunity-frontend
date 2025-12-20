@@ -1,6 +1,14 @@
+import { Comment } from "@/store/comment/comment.types";
 import { Pencil, Trash2 } from "lucide-react";
 
-export default function CommentCard({ comment, currentUserEmail, onEdit, onDelete }) {
+interface CommentCardProps {
+    comment: Comment;
+    currentUserEmail: string;
+    onEdit: (commentId: number) => void;
+    onDelete: (commentId: number) => void;
+}
+
+export default function CommentCard({ comment, currentUserEmail, onEdit, onDelete }: CommentCardProps) {
     const isOwn = comment.author.email === currentUserEmail;
 
     return (
@@ -26,7 +34,7 @@ export default function CommentCard({ comment, currentUserEmail, onEdit, onDelet
                 <div className="flex flex-col justify-center gap-2 text-neutral-500">
                     <Pencil
                         className="w-4 h-4 cursor-pointer hover:text-neutral-300"
-                        onClick={() => onEdit(comment)}
+                        onClick={() => onEdit(comment.id)}
                     />
                     <Trash2
                         className="w-4 h-4 cursor-pointer hover:text-red-400"
