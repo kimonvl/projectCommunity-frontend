@@ -1,26 +1,34 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
-import { useEffect, useState } from "react";
+import { ChangeEvent, ChangeEventHandler, useEffect, useState } from "react";
 import { selectCurrentUserEmail, selectCurrentUserId } from "@/store/auth/auth.selector";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
-import { selectIssueById, selectSelectedIssue } from "@/store/issue/issue.selector";
+import { selectSelectedIssue } from "@/store/issue/issue.selector";
 import { changeIssueStatusStart, clearSelectedIssue, deleteIssueStart, getSelectedIssueStart } from "@/store/issue/issueSlice";
 import { selectSelectedIssueComments } from "@/store/comment/comment.selector";
 import { createCommentStart, getIssueCommentsStart } from "@/store/comment/commentSlice";
-import { getIssueComments } from "@/store/comment/comment.saga";
 import CommentCard from "@/components/comment/CommentCard";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
 
 export default function IssueDetails() {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
-    const { issueId } = useParams();
-    const issue = useSelector(selectSelectedIssue);
-    const currentUserEmail = useSelector(selectCurrentUserEmail);
-    const currentUserId = useSelector(selectCurrentUserId);
-    const comments = useSelector(selectSelectedIssueComments);
+    const dispatch = useAppDispatch();
+    const { issueId } = useParams<{issueId: string}>();
+    const issue = useAppSelector(selectSelectedIssue);
+    const currentUserEmail = useAppSelector(selectCurrentUserEmail);
+    const currentUserId = useAppSelector(selectCurrentUserId);
+    const comments = useAppSelector(selectSelectedIssueComments);
     const [comment, setComment] = useState("");
+
+    const issueIdNum = Number(issueId);
+    if(Number.isNaN(issueIdNum)) {
+        navigate("/not-found");
+        return null;
+    }
+    if (!currentUserEmail) {
+        return null;
+    }
 
     useEffect(() => {
         return () => {
@@ -29,39 +37,41 @@ export default function IssueDetails() {
     }, [])
 
     useEffect(() => {
-        dispatch(getSelectedIssueStart(issueId))
-        dispatch(getIssueCommentsStart(issueId));
+        dispatch(getSelectedIssueStart(issueIdNum))
+        dispatch(getIssueCommentsStart(issueIdNum));
     }, [issueId]);
 
-    const handleStatusChange = (e) => {
+    const handleStatusChange = (e: ChangeEvent<HTMLSelectElement>) => {
         const newStatus = e.target.value;
         // avoid dispatching the same status
-        if (newStatus !== issue.status) {
-            dispatch(changeIssueStatusStart({
-                issueId: issue?.id,
-                status: newStatus
-            }));
+        if (newStatus !== issue?.status) {
+            if (issue) {
+                dispatch(changeIssueStatusStart({
+                    issueId: issue?.id,
+                    status: newStatus
+                }));
+            }
         }
     }
 
     const handleIssueDelete = () => {
-        dispatch(deleteIssueStart({issueId, navigate}));
+        dispatch(deleteIssueStart({issueId: issueIdNum, navigate}));
     }
 
     const handleSendComment = () => {
         dispatch(createCommentStart({
             content: comment,
-            issueId
+            issueId: issueIdNum,
         }));
         setComment("");
     }
 
-    const onCommentDelete = (commentId) => {
+    const onCommentDelete = (commentId: number) => {
         console.log("Comment deleting ", commentId);
 
     }
 
-    const onCommentEdit = (commentId) => {
+    const onCommentEdit = (commentId: number) => {
         console.log("Comment edit ", commentId);
 
     }
