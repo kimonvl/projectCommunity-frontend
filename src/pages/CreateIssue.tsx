@@ -1,12 +1,18 @@
 import CommonForm from "@/components/common-form/CommonForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createIssueFormControlls } from "@/config/CreateIssueFormControlls";
 import { createIssueStart } from "@/store/issue/issueSlice";
 
-const CreateIssue = ({ open, setOpen, projectId }) => {
+interface CreateIssueProps {
+    open: boolean;
+    setOpen: Dispatch<SetStateAction<boolean>>;
+    projectId: number;
+}
+
+const CreateIssue = ({ open, setOpen, projectId }: CreateIssueProps) => {
     const dispatch = useDispatch();
 
     const [formInput, setFormInput] = useState({

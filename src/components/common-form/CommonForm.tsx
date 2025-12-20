@@ -6,7 +6,7 @@ interface CommonFormProps<TFormState> {
     formControls: FormControl<TFormState>[];
     formInput: TFormState;
     setFormInput: React.Dispatch<React.SetStateAction<TFormState>>;
-    handleSubmit: (e: React.FormEvent) => void;
+    handleSubmit?: (e: React.FormEvent) => void;
     buttonName: string;
     btnDisabled?: boolean;
 }
