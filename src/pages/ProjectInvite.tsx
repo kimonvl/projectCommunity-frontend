@@ -1,32 +1,42 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, SetStateAction, Dispatch, ChangeEvent } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { selectSearchUsers, selectUserLoading } from "@/store/user/user.selector";
 import { clearSearchUsers, getSearchUsersStart } from "@/store/user/userSlice";
 import { Loader2 } from "lucide-react";
+import { User } from "@/store/auth/auth.types";
 
 // debounce utility
-function debounce(fn, delay) {
-  let timeout;
-  return (...args) => {
+function debounce<T extends (...args: any[]) => void>(fn: T, delay: number) {
+  let timeout: ReturnType<typeof setTimeout>;
+
+  return (...args: Parameters<T>) => {
     clearTimeout(timeout);
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
 
-export default function ProjectInvite({ projectId, open, setOpen, onInvite }) {
+interface ProjectInviteProps {
+  projectId: number;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  onInvite: (selectedUsers: User[]) => void;
+}
+
+export default function ProjectInvite({ projectId, open, setOpen, onInvite }: ProjectInviteProps) {
   const dispatch = useAppDispatch();
   const searchUsers = useAppSelector(selectSearchUsers);
   const loading = useAppSelector(selectUserLoading);
+
   const [search, setSearch] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [suggestions, setSuggestions] = useState<User[]>([]);
+  const [selected, setSelected] = useState<User[]>([]);
 
   // debounced search handler
   const debouncedSearch = useMemo(
     () =>
-      debounce((value) => {
+      debounce((value: string) => {
         if (!value.trim()) {
           dispatch(clearSearchUsers());
           setSuggestions([]);
@@ -37,27 +47,27 @@ export default function ProjectInvite({ projectId, open, setOpen, onInvite }) {
           projectId
         }));
       }, 400),
-    [dispatch] // re-create debounce when dispatch updates
+    [dispatch, projectId] // re-create debounce when dispatch updates
   );
 
   useEffect(() => {
-    const filtered = searchUsers?.filter((u) => !selected.some((s) => s.id === u.id)); // exclude selected ones
+    const filtered = searchUsers?.filter((u) => !selected.some((s: User) => s.id === u.id)) ?? []; // exclude selected ones
     setSuggestions(filtered);
-  }, [searchUsers]);
+  }, [searchUsers, selected]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearch(value);
     debouncedSearch(value);
   };
 
-  const addUser = (user) => {
+  const addUser = (user: User) => {
     setSelected((prev) => [...prev, user]);
     setSuggestions([]);
     setSearch("");
   };
 
-  const removeUser = (id) => {
+  const removeUser = (id: number) => {
     setSelected(selected.filter((s) => s.id !== id));
   };
 

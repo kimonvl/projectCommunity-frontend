@@ -170,7 +170,7 @@ useEffect(() => {
                 {/* RIGHT SIDE CHAT BOX */}
                 <ChatBox />
             </div>
-            <ProjectInvite projectId={projectId} open={projectInveteIsOpen} setOpen={setProjectInviteIsOpen} onInvite={onInvite} />
+            <ProjectInvite projectId={projectIdNum} open={projectInveteIsOpen} setOpen={setProjectInviteIsOpen} onInvite={onInvite} />
         </>
     );
 }
