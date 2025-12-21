@@ -19,12 +19,12 @@ export const websocketSlice = createSlice({
             state.isConnected = false;
             state.subscribedTopics = {};
         },
-        subscribeToTopicStart: () => { },
+        subscribeToTopicStart: (_state, _action: PayloadAction<number>) => { },
         subscribeToTopicSuccess: (state, action: PayloadAction<string>) => {
             state.subscribedTopics[action.payload] = true;
         },
         subscribeToTopicFailure: () => { },
-        unSubscribeFromTopicStart: () => { },
+        unSubscribeFromTopicStart: (_state, _action: PayloadAction<number>) => { },
         unSubscribeFromTopicSuccess: (state, action) => {
             delete state.subscribedTopics[action.payload];
         },

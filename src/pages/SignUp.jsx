@@ -1,14 +1,12 @@
 import CommonForm from '@/components/common-form/CommonForm'
-import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
 import { signUpFormControls } from '@/config/AuthFormControlls'
 import { signUpStart } from '@/store/auth/authSlice'
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from '@/store/hooks'
+import { useState } from 'react'
 
 const SignUp = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [signUpInput, setSignUpInput] = useState({
         email : "",
         password : "",

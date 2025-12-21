@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
+import { useAppDispatch } from "@/store/hooks";
 import { Notification } from "@/store/notification/notification.types";
 import { acceptProjectInvitationStart } from "@/store/project/projectSlice";
-import { useDispatch } from "react-redux";
 
 interface ProjectInviteNotificationProps {
     notification: Notification;
 }
 
 export default function ProjectInviteNotification({ notification }: ProjectInviteNotificationProps) {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     if (notification.metadata?.type !== "PROJECT_INVITE") {
         return;

@@ -2,11 +2,11 @@ import CommonForm from '@/components/common-form/CommonForm'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { createProjectFormControls } from '@/config/CreateProjectFormControls'
+import { useAppDispatch, useAppSelector } from '@/store/hooks'
 import { selectCreateProjectLoading } from '@/store/project/project.selector'
 import { createProjectStart } from '@/store/project/projectSlice'
 import { CreateProjectFormState } from '@/types/formConfig/project/createProjectFormState'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 interface CreateProjectProps {
     open: boolean;
@@ -14,8 +14,8 @@ interface CreateProjectProps {
 }
 
 const CreateProject = ({ open, setOpen }: CreateProjectProps) => {
-    const dispatch = useDispatch();
-    const createProjectLoading = useSelector(selectCreateProjectLoading);
+    const dispatch = useAppDispatch();
+    const createProjectLoading = useAppSelector(selectCreateProjectLoading);
     const [cpFormInput, setCpFormInput] = useState<CreateProjectFormState>({
         title: "",
         description: "",

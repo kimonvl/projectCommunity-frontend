@@ -2,11 +2,11 @@ import CommonForm from '@/components/common-form/CommonForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { loginFormControls } from '@/config/AuthFormControlls'
 import { loginStart } from '@/store/auth/authSlice'
+import { useAppDispatch } from '@/store/hooks'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 const Login = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const [loginInput, setLoginInput] = useState({
         email : "",
         password : "",

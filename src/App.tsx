@@ -3,7 +3,6 @@ import './App.css'
 import SignUp from './pages/SignUp'
 import Login from './pages/LogIn'
 import ProtectedRoute from './components/protected-route/ProtectedRoute'
-import { connect, useDispatch, useSelector } from 'react-redux'
 import { selectCurrentUser, selectIsAuthenticated, selectLoading } from './store/auth/auth.selector'
 import Home from './pages/Home'
 import MainLayout from './pages/MainLayout'
@@ -12,13 +11,14 @@ import { isAuthenticatedStart } from './store/auth/authSlice'
 import { connectWebsocketStart } from './store/websocket/websocketSlice'
 import ProjectDetails from './pages/ProjectDetails'
 import IssueDetails from './pages/IssueDetails'
+import { useAppDispatch, useAppSelector } from './store/hooks'
 
 function App() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const location = useLocation();
-  const isAuthenticated = useSelector(selectIsAuthenticated);
-  const user = useSelector(selectCurrentUser);
-  const loading = useSelector(selectLoading);
+  const isAuthenticated = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectCurrentUser);
+  const loading = useAppSelector(selectLoading);
 
   useEffect(() => {
 

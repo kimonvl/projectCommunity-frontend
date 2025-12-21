@@ -2,9 +2,9 @@ import CommonForm from "@/components/common-form/CommonForm";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Dispatch, SetStateAction, useState } from "react";
-import { useDispatch } from "react-redux";
 import { createIssueFormControlls } from "@/config/CreateIssueFormControlls";
 import { createIssueStart } from "@/store/issue/issueSlice";
+import { useAppDispatch } from "@/store/hooks";
 
 interface CreateIssueProps {
     open: boolean;
@@ -13,7 +13,7 @@ interface CreateIssueProps {
 }
 
 const CreateIssue = ({ open, setOpen, projectId }: CreateIssueProps) => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const [formInput, setFormInput] = useState({
         title: "",

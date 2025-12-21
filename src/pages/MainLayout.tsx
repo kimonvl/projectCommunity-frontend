@@ -1,11 +1,11 @@
 import Header from '@/components/header/Header'
+import { useAppDispatch } from '@/store/hooks'
 import { getUnseenNotificationsStart } from '@/store/notification/notificationSlice'
-import React, { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
 import { Outlet } from 'react-router-dom'
 
 const MainLayout = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     useEffect(() => {
         dispatch(getUnseenNotificationsStart());
     }, [dispatch]);

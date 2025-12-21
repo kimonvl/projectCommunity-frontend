@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { clearSelectedProject, getSelectedProjectStart } from "@/store/project/projectSlice";
@@ -16,19 +16,27 @@ import { assignUserToIssueStart, getProjectIssuesStart } from "@/store/issue/iss
 import { selectSelectedProjectIssues } from "@/store/issue/issue.selector";
 import { selectActiveChatId } from "@/store/chat/chat.selector";
 import { subscribeToTopicStart, unSubscribeFromTopicStart } from "@/store/websocket/websocketSlice";
+import { User } from "@/store/auth/auth.types";
 
 export default function ProjectDetails() {
     const dispatch = useAppDispatch();
-    const { projectId } = useParams();
+    const navigate = useNavigate();
+    const { projectId } = useParams<{projectId: string}>();
     const selectedProject = useAppSelector(selectSelectedProject);
     const selectedProjectIssues = useAppSelector(selectSelectedProjectIssues);
     const activeChatId = useAppSelector(selectActiveChatId);
     const [projectInveteIsOpen, setProjectInviteIsOpen] = useState(false);
     const wsConnected = useAppSelector(selectWebsocketIsConnected);
+
+    const projectIdNum = Number(projectId);
+    if (Number.isNaN(projectIdNum)) {
+        return null;
+    }
+
     useEffect(() => {
-        dispatch(getSelectedProjectStart(projectId));
-        dispatch(getProjectIssuesStart(projectId));
-        dispatch(fetchActiveChatStart(projectId));
+        dispatch(getSelectedProjectStart(projectIdNum));
+        dispatch(getProjectIssuesStart(projectIdNum));
+        dispatch(fetchActiveChatStart(projectIdNum));
     }, [projectId]);
 
 
@@ -36,13 +44,15 @@ export default function ProjectDetails() {
         console.log("subscribe effect");
         
         if (!wsConnected) return;
-
-        // subscribe to THIS project chat only
-        dispatch(subscribeToTopicStart(activeChatId));
+        if (activeChatId){
+            // subscribe to THIS project chat only
+            dispatch(subscribeToTopicStart(activeChatId));
+        }
 
         // unsubscribe when leaving page
         return () => {
-            dispatch(unSubscribeFromTopicStart(activeChatId));
+            if (activeChatId)
+                dispatch(unSubscribeFromTopicStart(activeChatId));
         };
     }, [activeChatId, wsConnected, projectId]);
 
@@ -53,13 +63,13 @@ useEffect(() => {
 }, [dispatch]);
 
 
-    const onInvite = (selectedUsers) => {
+    const onInvite = (selectedUsers: User[]) => {
         const emailList = selectedUsers?.map((user) => user.email);
-        dispatch(sendProjectInvitationStart({ projectId, receiverEmails: emailList }));
+        dispatch(sendProjectInvitationStart({ projectId: projectIdNum, receiverEmails: emailList }));
         setProjectInviteIsOpen(false);
     }
 
-    const onAssign = (issueId, user) => {
+    const onAssign = (issueId: number, user: User) => {
         dispatch(assignUserToIssueStart({
             issueId,
             userId: user?.id,

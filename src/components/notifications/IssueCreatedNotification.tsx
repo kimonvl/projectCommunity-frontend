@@ -1,6 +1,6 @@
+import { useAppDispatch } from '@/store/hooks';
 import { Notification } from '@/store/notification/notification.types';
 import { markAsSeenNotificationStart } from '@/store/notification/notificationSlice';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom'
 
 interface IssueCreatedNotificationProps {
@@ -9,7 +9,7 @@ interface IssueCreatedNotificationProps {
 
 const IssueCreatedNotification = ({notification}: IssueCreatedNotificationProps) => {
     const navigate = useNavigate();
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
 
     const handleNotificationClick = () => {
         if (notification.metadata?.type === "ISSUE_CREATED") {

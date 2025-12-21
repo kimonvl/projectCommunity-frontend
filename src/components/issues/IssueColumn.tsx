@@ -11,7 +11,7 @@ interface IssueColumnProps {
     participants: User[];
     onAssign: (issueId: number, user: User) => void;
     projectId: number;
-    createActive: boolean;
+    createActive?: boolean;
 }
 
 export default function IssueColumn({ title, issues, participants, onAssign, projectId, createActive = false }: IssueColumnProps) {
