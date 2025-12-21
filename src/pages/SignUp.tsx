@@ -12,7 +12,7 @@ const SignUp = () => {
         password : "",
     });
 
-    const handleSubmit = (e) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
         dispatch(signUpStart(signUpInput));
     }
